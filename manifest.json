@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
 
-  "name": "Getting started example",
+  "name": "Youtube Channel Switcher",
   "description": "This extension allows the user to switch between his channels",
   "version": "1.0",
 
