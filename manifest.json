@@ -12,5 +12,10 @@
   "permissions": [
     "activeTab",
     "storage"
-  ]
+  ],
+  "content_scripts": [
+    {
+      "js": ["popup.js", "settings.js"]
+    }
+  ],
 }
