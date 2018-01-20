@@ -9,11 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveButton = document.getElementById('saveButton');
   saveButton.addEventListener('click', () => {
     const inputs = document.getElementsByTagName('input');
-    let params = [];
+    let channels = [];
     for(let i = 0; i < (inputs.length / 2); ++i) {
-      params.push({name: inputs[2 * i].value, url: inputs[(2 * i) + 1].value});
+      channels.push({name: inputs[2 * i].value, url: inputs[(2 * i) + 1].value});
     }
-    saveParams(params);
+    savechannels(channels);
   });
 
   const table = document.getElementById("myTable");
@@ -51,26 +51,26 @@ function deleteRow(table, button) {
 }
 
 function fillTable(table) {
-  getParams( (params) => {
-    if(params) {
-      params.forEach(param => {
+  getChannels( (channels) => {
+    if(channels) {
+      channels.forEach(param => {
         insertRow(table, param.name, param.url);
       });
     }
   });
 }
 
-function getParams(callback) {
+function getChannels(callback) {
   // See https://developer.chrome.com/apps/storage#type-StorageArea. We check
   // for chrome.runtime.lastError to ensure correctness even when the API call
   // fails.
-  chrome.storage.sync.get("params", (items) => {
-    callback(chrome.runtime.lastError ? null : items["params"]);
+  chrome.storage.sync.get("channels", (items) => {
+    callback(chrome.runtime.lastError ? null : items["channels"]);
   });
 }
 
-function saveParams(items) {
-  chrome.storage.sync.set({params: items}, () => {
+function savechannels(items) {
+  chrome.storage.sync.set({channels: items}, () => {
     const notifDiv = document.getElementById('notification');
     notifDiv.innerHTML += '<p id="notif">Successfully saved !<p>';
     setTimeout(() => {
