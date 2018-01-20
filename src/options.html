@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Youtube Channel Switcher Extension configuration</title>
+    <script src="options.js"></script>
+    <style>
+      table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+      }
+
+      td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+      }
+
+      tr:nth-child(even) {
+          background-color: #dddddd;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        box-sizing: border-box;
+        -webkit-box-sizing:border-box;
+        -moz-box-sizing: border-box;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Youtube Channel Switcher</h1>
+    <h3>Fill the table with the name and its url of each channels</h3>
+    <div>
+      <button id="addButton">Add a new row</button>
+      <br/>
+      <table id="myTable">
+        <tr>
+          <th>Name</th>
+          <th>Url</th>
+        </tr>
+      </table>
+    </div>
+    <br/>
+    <button id="save">Save</button>
+  </body>
+</html>

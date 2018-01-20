@@ -1,26 +1,21 @@
 {
-  "manifest_version": 2,
-
   "name": "Youtube Channel Switcher",
   "description": "This extension allows the user to switch between his channels",
   "version": "1.0",
-
+  "manifest_version": 2,
   "browser_action": {
-    "default_icon": "youtube-icon-favicon.png",
-    "default_popup": "popup.html"
+    "default_title": "Youtube Channel Switcher",
+    "default_icon": "icons/icon19.png",
+    "default_popup": "src/popup.html"
   },
   "permissions": [
     "activeTab",
     "storage"
   ],
+  "options_page": "src/options.html",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
-  },
-  "content_scripts": [
-    {
-      "js": ["popup.js", "settings.js"]
-    }
-  ],
+  }
 }
