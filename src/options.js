@@ -21,13 +21,33 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function insertRow(table, name = "", url = "") {
-  let row = table.insertRow(table.length);
+  let row = table.insertRow();
   let cell1 = row.insertCell(0);
   let cell2 = row.insertCell(1);
-  console.log(name)
-  console.log(url)
-  cell1.innerHTML = "<input type='text' id='name' name='name' placeholder='My awesome channel' value='"+name+"'>";
+
+  let deleteButton = document.createElement("BUTTON");
+  let textButton = document.createTextNode("-");
+  deleteButton.appendChild(textButton);
+  deleteButton.setAttribute('class', 'removeButton');
+  deleteButton.setAttribute('data-row', table.rows.length - 1);
+  deleteButton.addEventListener("click", (e) => {
+    deleteRow(table, e.target);
+  });
+  cell1.appendChild(deleteButton);
+
+  let input = document.createElement("input");
+  input.setAttribute('type', "text");
+  input.setAttribute('value', name);
+  input.setAttribute('placeholder', 'My awesome channel');
+  cell1.appendChild(input);
+
   cell2.innerHTML = "<input type='text' id='url' name='name' placeholder='https://www.youtube.com/signin?feature=masthead_switcher&next=%2Fdashboard%3Fo%3DU&action_handle_signin=true&authuser=0&skip_identity_prompt=False' value='"+url+"'>";
+
+
+}
+
+function deleteRow(table, button) {
+  table.deleteRow(button.dataset.row);
 }
 
 function fillTable(table) {
