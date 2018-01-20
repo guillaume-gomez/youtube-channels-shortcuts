@@ -1,10 +1,14 @@
 function fillDropdown(id = "dropdown") {
   let dropdown = document.getElementById(id);
-  channels.forEach(item => {
-    const added = document.createElement('option');
-    added.text = item.name;
-    added.value = item.url;
-    dropdown.append(added);
+  getChannels((channels) => {
+    if(channels) {
+      channels.forEach(item => {
+        const added = document.createElement('option');
+        added.text = item.name;
+        added.value = item.url;
+        dropdown.append(added);
+      });
+    }
   });
 }
 
@@ -25,3 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
     connectToChannel(dropdown.value);
   });
 });
+
+
+function getChannels(callback) {
+  chrome.storage.sync.get("channels", (items) => {
+    callback(chrome.runtime.lastError ? null : items["channels"]);
+  });
+}
