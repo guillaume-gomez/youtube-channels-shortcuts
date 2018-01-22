@@ -21,8 +21,7 @@ function connectToChannel(url) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  console.log(channels)
-  var dropdown = document.getElementById('dropdown');
+  const dropdown = document.getElementById('dropdown');
 
   fillDropdown();
   dropdown.addEventListener('change', () => {
