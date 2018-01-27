@@ -29,12 +29,6 @@ function connectToChannel(url, redirection = redirections[0].url) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const dropdown = document.getElementById('dropdown');
-  dropdown.addEventListener('change', () => {
-    connectToChannel(dropdown.value);
-  });
-  fillDropdown();
-
   const linkToOption = document.getElementById('link-to-options');
   linkToOption.addEventListener('click', () => {
     chrome.tabs.create({'url': "/src/options.html" });
@@ -62,14 +56,14 @@ function fillCards() {
   });
 }
 
-function createActionInCard(params) {
+function createActionInCard(channel_url, params) {
   let buttonItem = document.createElement("button");
   buttonItem.setAttribute('class', 'btn btn-default btn-sm');
   buttonItem.setAttribute('type', 'button');
 
   let contentText = document.createTextNode(params.title);
   buttonItem.addEventListener('click', () => {
-    connectToChannel(dropdown.value, params.url);
+    connectToChannel(channel_url, params.url);
   })
 
   let iItem = document.createElement("i");
@@ -101,7 +95,7 @@ function createCard(item) {
   cardBloclDiv.appendChild(buttonGroup);
 
   redirections.forEach(params => {
-    buttonGroup.appendChild(createActionInCard(params));
+    buttonGroup.appendChild(createActionInCard(item.url, params));
   });
 
   return cardDiv;
