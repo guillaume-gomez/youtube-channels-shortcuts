@@ -75,7 +75,7 @@ function getChannels(callback) {
 function savechannels(items) {
   chrome.storage.sync.set({channels: items}, () => {
     const notifDiv = document.getElementById('notification');
-    notifDiv.innerHTML += '<p id="notif">Successfully saved !<p>';
+    notifDiv.innerHTML += '<div class="alert alert-success" role="alert">Successfully saved !</div>';
     setTimeout(() => {
       notifDiv.innerHTML = "";
     }, 3000);
