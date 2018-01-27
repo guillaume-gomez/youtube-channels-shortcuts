@@ -1,9 +1,9 @@
 const redirections = [
-  {title: "dashboard", url: "https://www.youtube.com/dashboard?o=U", icon: "foo"},
-  {title: "channel", url: "https://www.youtube.com/features", icon: "foo"},
-  {title: "analytics", url: "ttps://www.youtube.com/analytics?o=U", icon: "foo"},
-  {title: "video", url: "https://www.youtube.com/my_videos?o=U", icon: "foo"},
-  {title: "playlist", url: "https://www.youtube.com/view_all_playlists", icon: "foo"}
+  {title: "dashboard", url: "https://www.youtube.com/dashboard?o=U", icon: "fa fa-home"},
+  {title: "channel", url: "https://www.youtube.com/features", icon: "fa fa-television"},
+  {title: "analytics", url: "ttps://www.youtube.com/analytics?o=U", icon: "fa fa-bar-chart"},
+  {title: "video", url: "https://www.youtube.com/my_videos?o=U", icon: "fa fa-youtube-play"},
+  {title: "playlist", url: "https://www.youtube.com/view_all_playlists", icon: "fa fa-list"}
 ];
 
 function fillDropdown(id = "dropdown") {
@@ -58,7 +58,7 @@ function fillCards() {
 
 function createActionInCard(channel_url, params) {
   let buttonItem = document.createElement("button");
-  buttonItem.setAttribute('class', 'btn btn-default btn-sm');
+  buttonItem.setAttribute('class', 'btn btn-secondary btn-sm');
   buttonItem.setAttribute('type', 'button');
 
   let contentText = document.createTextNode(params.title);
@@ -66,10 +66,10 @@ function createActionInCard(channel_url, params) {
     connectToChannel(channel_url, params.url);
   })
 
-  let iItem = document.createElement("i");
-  iItem.setAttribute('class', 'glyphicon glyphicon-name');
+  let iItem = document.createElement("span");
+  iItem.setAttribute('class', params.icon);
 
-  buttonItem.appendChild(contentText);
+  //buttonItem.appendChild(contentText);
   buttonItem.appendChild(iItem);
   return buttonItem;
 }
