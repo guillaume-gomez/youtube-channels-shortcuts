@@ -10,8 +10,13 @@ document.addEventListener('DOMContentLoaded', () => {
   saveButton.addEventListener('click', () => {
     const inputs = document.getElementsByTagName('input');
     let channels = [];
-    for(let i = 0; i < (inputs.length / 2); ++i) {
-      channels.push({name: inputs[2 * i].value, url: inputs[(2 * i) + 1].value});
+    const rowSize = 3;
+    for(let i = 0; i < (inputs.length / rowSize); ++i) {
+      channels.push(
+        { name: inputs[rowSize * i].value,
+          url: inputs[(rowSize * i) + 1].value,
+          category: inputs[(rowSize * i) + 2].value
+        });
     }
     savechannels(channels);
   });
@@ -20,11 +25,12 @@ document.addEventListener('DOMContentLoaded', () => {
   fillTable(table);
 });
 
-function insertRow(table, name = "", url = "") {
+function insertRow(table, name = "", url = "", category="") {
   let row = table.insertRow();
   let cell1 = row.insertCell(0);
   let cell2 = row.insertCell(1);
   let cell3 = row.insertCell(2);
+  let cell4 = row.insertCell(3);
 
   let deleteButton = document.createElement("BUTTON");
   let textButton = document.createTextNode("-");
@@ -45,8 +51,7 @@ function insertRow(table, name = "", url = "") {
   cell2.appendChild(input);
 
   cell3.innerHTML = "<input class='form-control' type='text' id='url' name='name' placeholder='https://www.youtube.com/signin?feature=masthead_switcher&next=%2Fdashboard%3Fo%3DU&action_handle_signin=true&authuser=0&skip_identity_prompt=False' value='"+url+"'>";
-
-
+  cell4.innerHTML = "<input class='form-control' type='text' id='category' name='category' placeholder='personnal' value='"+category+"'>";
 }
 
 function deleteRow(table, button) {
@@ -57,7 +62,7 @@ function fillTable(table) {
   getChannels( (channels) => {
     if(channels) {
       channels.forEach(param => {
-        insertRow(table, param.name, param.url);
+        insertRow(table, param.name, param.url, param.category);
       });
     }
   });
