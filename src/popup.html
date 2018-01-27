@@ -7,44 +7,23 @@
 <html>
   <head>
     <title>Youtube Channel Switcher Extension</title>
-    <style type="text/css">
-      body {
-        margin: 10px;
-        white-space: nowrap;
-      }
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/customcss.css" rel="stylesheet">
 
-      h1 {
-        font-size: 15px;
-      }
-
-      #container {
-        align-items: center;
-        display: flex;
-        justify-content: space-between;
-      }
-
-      select {
-        max-width: 100px;
-      }
-    </style>
-
-    <!--
-      - JavaScript and HTML must be in separate files: see our Content Security
-      - Policy documentation[1] for details and explanation.
-      -
-      - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
-    -->
+    <script src="../js/bootstrap.min.js"></script>
     <script src="settings.js"></script>
     <script src="popup.js"></script>
   </head>
 
   <body>
-    <h1>Youtube Channel Switcher</h1>
-    <div id="container">
-      <span>Pick a channel</span>
-      <select id="dropdown">
-        <option selected disabled hidden value=''></option>
-      </select>
+    <div class="container-fluid main">
+      <h3>Youtube Channel Switcher</h3>
+      <div id="container" class="form-group">
+        <span>Pick a channel</span>
+        <select id="dropdown" class="form-control">
+          <option selected disabled hidden value=''></option>
+        </select>
+      </div>
     </div>
   </body>
 </html>

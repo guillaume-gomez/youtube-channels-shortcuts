@@ -2,42 +2,16 @@
 <html>
   <head>
     <title>Youtube Channel Switcher Extension configuration</title>
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/customcss.css" rel="stylesheet">
+    <script src="../js/bootstrap.min.js"></script>
     <script src="options.js"></script>
-    <style>
-      table {
-          font-family: arial, sans-serif;
-          border-collapse: collapse;
-          width: 100%;
-      }
-
-      td, th {
-          border: 1px solid #dddddd;
-          text-align: left;
-          padding: 8px;
-      }
-
-      #notif{
-        color: green;
-      }
-
-      tr:nth-child(even) {
-          background-color: #dddddd;
-      }
-
-      input[type="text"] {
-        width: 100%;
-        box-sizing: border-box;
-        -webkit-box-sizing:border-box;
-        -moz-box-sizing: border-box;
-      }
-    </style>
   </head>
   <body>
     <h1>Youtube Channel Switcher</h1>
     <h3>Fill the table with the name and its url of each channels</h3>
-    <div>
-      <button id="addButton">Add a new row</button>
-      <br/>
+    <div class="form-group">
       <table id="myTable">
         <tr>
           <th>Name</th>
@@ -47,6 +21,7 @@
     </div>
     <br/>
     <button id="saveButton">Save</button>
+    <button class="btn btn-primary" id="addButton">Add a new row</button>
     </br>
     <div id="notification">
     </div>
