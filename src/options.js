@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
           category: inputs[(rowSize * i) + 2].value
         });
     }
-    savechannels(channels);
+    saveChannels(channels);
   });
 
   const table = document.getElementById("myTable");
@@ -77,7 +77,7 @@ function getChannels(callback) {
   });
 }
 
-function savechannels(items) {
+function saveChannels(items) {
   chrome.storage.sync.set({channels: items}, () => {
     const notifDiv = document.getElementById('notification');
     notifDiv.innerHTML += '<div class="alert alert-success" role="alert">Successfully saved !</div>';
