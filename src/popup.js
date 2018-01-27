@@ -57,7 +57,7 @@ function createDeck(name) {
   deck.setAttribute('class', 'card-deck');
 
   let p = document.createElement("p");
-  p.setAttribute('class', 'badge badge-pill badge-primary');
+  p.setAttribute('class', 'badge badge-pill badge-default');
   const contentText = document.createTextNode(name);
   p.appendChild(contentText);
 
@@ -96,7 +96,7 @@ function createCard(item) {
   cardBloclDiv.setAttribute('class', "card-block");
 
   let cardTitle = document.createElement("span");
-  cardTitle.setAttribute('class', 'card-title');
+  cardTitle.setAttribute('class', 'card-title channel-name red-text');
   let cardTitleText = document.createTextNode(item.name + " ");
   cardTitle.appendChild(cardTitleText);
 

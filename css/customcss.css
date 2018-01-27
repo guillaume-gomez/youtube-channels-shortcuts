@@ -7,3 +7,11 @@ body {
   color: #878889;
   font-size: x-small;
 }
+
+.channel-name {
+  font-weight: bold;
+}
+
+.red-text {
+  color: #cc181e;
+}
