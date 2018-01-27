@@ -57,7 +57,7 @@ function createDeck(name) {
   deck.setAttribute('class', 'card-deck');
 
   let p = document.createElement("p");
-  p.setAttribute('class', 'badge badge-pill badge-default');
+  p.setAttribute('class', 'badge badge-pill badge-primary');
   const contentText = document.createTextNode(name);
   p.appendChild(contentText);
 
