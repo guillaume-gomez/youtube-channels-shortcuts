@@ -2,17 +2,12 @@ body {
   margin: 20px;
   white-space: nowrap;
 }
-/*
-#container {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-}
-*/
+
 #notif {
   color: green;
 }
 
-/*select {
-  max-width: 400px;
-}*/
+#link-to-options {
+  color: #878889;
+  font-size: x-small;
+}
