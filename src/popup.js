@@ -22,14 +22,52 @@ function getChannels(callback) {
 
 
 function fillCards() {
-  const cardDeck = document.getElementsByClassName('card-deck')[0];
+  let cardDeckContainer = document.getElementById('cards-container');
   getChannels((channels) => {
     if(channels) {
-      channels.forEach(item => {
-        cardDeck.appendChild(createCard(item));
+      Object.entries(sortChannelByCategory(channels)).forEach(([category, channelsArray]) => {
+        let cardDeck = createDeck(category);
+        cardDeckContainer.appendChild(cardDeck);
+        channelsArray.forEach(channel => {
+          cardDeck.appendChild(createCard(channel));
+        });
       });
     }
   });
+}
+
+
+function sortChannelByCategory(channels) {
+  let channelsByCategory = {};
+  channels.forEach(channel => {
+    if(channelsByCategory[channel.category]) {
+      channelsByCategory[channel.category].push(channel);
+    } else {
+      channelsByCategory[channel.category] = [channel];
+    }
+   });
+  return channelsByCategory;
+}
+
+function createDeck(name) {
+  let containerDeck = document.createElement("div");
+  containerDeck.setAttribute('class', 'container');
+
+  let deck = document.createElement("div");
+  deck.setAttribute('class', 'card-deck');
+
+  let p = document.createElement("p");
+  p.setAttribute('class', 'badge badge-pill badge-default');
+  const contentText = document.createTextNode(name);
+  p.appendChild(contentText);
+
+  let hr = document.createElement("hr");
+
+  containerDeck.appendChild(hr);
+  containerDeck.appendChild(p);
+  containerDeck.appendChild(deck);
+
+  return containerDeck;
 }
 
 function createActionInCard(channel_url, params) {
@@ -57,9 +95,9 @@ function createCard(item) {
   let cardBloclDiv = document.createElement("div");
   cardBloclDiv.setAttribute('class', "card-block");
 
-  let cardTitle = document.createElement("h6");
+  let cardTitle = document.createElement("span");
   cardTitle.setAttribute('class', 'card-title');
-  let cardTitleText = document.createTextNode(item.name);
+  let cardTitleText = document.createTextNode(item.name + " ");
   cardTitle.appendChild(cardTitleText);
 
   cardDiv.appendChild(cardBloclDiv);
