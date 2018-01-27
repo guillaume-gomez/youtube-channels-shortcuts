@@ -24,24 +24,27 @@ function insertRow(table, name = "", url = "") {
   let row = table.insertRow();
   let cell1 = row.insertCell(0);
   let cell2 = row.insertCell(1);
+  let cell3 = row.insertCell(2);
 
   let deleteButton = document.createElement("BUTTON");
   let textButton = document.createTextNode("-");
   deleteButton.appendChild(textButton);
-  deleteButton.setAttribute('class', 'removeButton');
+  deleteButton.setAttribute('class', 'removeButton btn btn-danger');
   deleteButton.setAttribute('data-row', table.rows.length - 1);
   deleteButton.addEventListener("click", (e) => {
     deleteRow(table, e.target);
   });
   cell1.appendChild(deleteButton);
+  cell1.setAttribute('scope', "row");
 
   let input = document.createElement("input");
   input.setAttribute('type', "text");
+  input.setAttribute('class', "form-control");
   input.setAttribute('value', name);
   input.setAttribute('placeholder', 'My awesome channel');
-  cell1.appendChild(input);
+  cell2.appendChild(input);
 
-  cell2.innerHTML = "<input type='text' id='url' name='name' placeholder='https://www.youtube.com/signin?feature=masthead_switcher&next=%2Fdashboard%3Fo%3DU&action_handle_signin=true&authuser=0&skip_identity_prompt=False' value='"+url+"'>";
+  cell3.innerHTML = "<input class='form-control' type='text' id='url' name='name' placeholder='https://www.youtube.com/signin?feature=masthead_switcher&next=%2Fdashboard%3Fo%3DU&action_handle_signin=true&authuser=0&skip_identity_prompt=False' value='"+url+"'>";
 
 
 }

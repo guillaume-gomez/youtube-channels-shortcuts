@@ -22,11 +22,17 @@ function connectToChannel(url) {
 
 document.addEventListener('DOMContentLoaded', () => {
   const dropdown = document.getElementById('dropdown');
-
-  fillDropdown();
   dropdown.addEventListener('change', () => {
     connectToChannel(dropdown.value);
   });
+  fillDropdown();
+
+  const linkToOption = document.getElementById('link-to-options');
+  linkToOption.addEventListener('click', () => {
+    chrome.tabs.create({'url': "/src/options.html" });
+  });
+
+
 });
 
 

@@ -5,25 +5,33 @@
 
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/customcss.css" rel="stylesheet">
+    <script src="../js/jquery-3.3.1.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="options.js"></script>
   </head>
   <body>
-    <h1>Youtube Channel Switcher</h1>
-    <h3>Fill the table with the name and its url of each channels</h3>
-    <div class="form-group">
-      <table id="myTable">
-        <tr>
-          <th>Name</th>
-          <th>Url</th>
-        </tr>
-      </table>
-    </div>
-    <br/>
-    <button id="saveButton">Save</button>
-    <button class="btn btn-primary" id="addButton">Add a new row</button>
-    </br>
-    <div id="notification">
+    <div class="container">
+      <h1 class="display-3">Youtube Channel Switcher</h1>
+      <p class="lead">Fill the table with the name and its url of each channels</p>
+      <div class="form-group">
+        <table id="myTable" class="table table-hover">
+          <thead class="thead-default">
+            <tr>
+              <th>Delete</th>
+              <th>Name</th>
+              <th>Url</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+      <br/>
+      <button class="btn btn-primary" id="saveButton">Save</button>
+      <button class="btn btn-secondary" id="addButton">Add a new row</button>
+      </br>
+      <div id="notification">
+      </div>
     </div>
   </body>
 </html>
