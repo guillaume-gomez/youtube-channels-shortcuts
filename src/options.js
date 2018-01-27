@@ -10,15 +10,24 @@ document.addEventListener('DOMContentLoaded', () => {
   saveButton.addEventListener('click', () => {
     const inputs = document.getElementsByTagName('input');
     let channels = [];
+    let error = false;
     const rowSize = 3;
     for(let i = 0; i < (inputs.length / rowSize); ++i) {
-      channels.push(
-        { name: inputs[rowSize * i].value,
-          url: inputs[(rowSize * i) + 1].value,
-          category: inputs[(rowSize * i) + 2].value
-        });
+
+      const name = inputs[rowSize * i].value;
+      const url = inputs[(rowSize * i) + 1].value;
+      const category = inputs[(rowSize * i) + 2].value || "Personnal";
+
+      if(name.length > 0 && url.length > 0) {
+        channels.push({name, url, category});
+      } else {
+        error = true;
+        addNotification("Line: "+(i + 1)+" could not saved( youtube channel and url is mandatory)", "danger", 5000);
+      }
     }
-    saveChannels(channels);
+    if(!error) {
+      saveChannels(channels);
+    }
   });
 
   const table = document.getElementById("myTable");
@@ -51,7 +60,7 @@ function insertRow(table, name = "", url = "", category="") {
   cell2.appendChild(input);
 
   cell3.innerHTML = "<input class='form-control' type='text' id='url' name='name' placeholder='https://www.youtube.com/signin?feature=masthead_switcher&next=%2Fdashboard%3Fo%3DU&action_handle_signin=true&authuser=0&skip_identity_prompt=False' value='"+url+"'>";
-  cell4.innerHTML = "<input class='form-control' type='text' id='category' name='category' placeholder='personnal' value='"+category+"'>";
+  cell4.innerHTML = "<input class='form-control' type='text' id='category' name='category' placeholder='Personnal' value='"+category+"'>";
 }
 
 function deleteRow(table, button) {
@@ -79,10 +88,14 @@ function getChannels(callback) {
 
 function saveChannels(items) {
   chrome.storage.sync.set({channels: items}, () => {
-    const notifDiv = document.getElementById('notification');
-    notifDiv.innerHTML += '<div class="alert alert-success" role="alert">Successfully saved !</div>';
+    addNotification("Successfully saved !", "success", 3000);
+  });
+}
+
+function addNotification(message, type, timer) {
+  const notifDiv = document.getElementById('notification');
+    notifDiv.innerHTML += "<div class='alert alert-"+type+"' role='alert'>"+message+"</div>";
     setTimeout(() => {
       notifDiv.innerHTML = "";
-    }, 3000);
-  });
+    }, timer);
 }
