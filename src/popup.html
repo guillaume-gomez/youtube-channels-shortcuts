@@ -17,13 +17,17 @@
 
   <body>
     <div class="container-fluid main">
-      <h3>Youtube Channel Switcher</h3>
-      <div id="container" class="form-group">
-        <span>Pick a channel</span>
-        <select id="dropdown" class="form-control">
-          <option selected disabled hidden value=''></option>
-        </select>
-      </div>
+      <h5>Youtube Channel Switcher</h5>
+      <form>
+        <div class="form-group row" id="container">
+          <label for="dropdown" class="col-6 col-form-label">Pick a channel</label>
+          <div class="col-6">
+            <select class="form-control" id="dropdown">
+              <option selected disabled hidden value=''></option>
+            </select>
+          </div>
+        </div>
+      </form>
     </div>
   </body>
 </html>
