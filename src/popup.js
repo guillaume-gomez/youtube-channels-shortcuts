@@ -6,20 +6,6 @@ const redirections = [
   {title: "playlist", url: "https://www.youtube.com/view_all_playlists", icon: "fa fa-list"}
 ];
 
-function fillDropdown(id = "dropdown") {
-  let dropdown = document.getElementById(id);
-  getChannels((channels) => {
-    if(channels) {
-      channels.forEach(item => {
-        const added = document.createElement('option');
-        added.text = item.name;
-        added.value = item.url;
-        dropdown.append(added);
-      });
-    }
-  });
-}
-
 function connectToChannel(url, redirection = redirections[0].url) {
   setTimeout(function() {
     chrome.tabs.update({url: redirection});
@@ -27,16 +13,6 @@ function connectToChannel(url, redirection = redirections[0].url) {
   }, 2000);
   chrome.tabs.update({url: url});
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-  const linkToOption = document.getElementById('link-to-options');
-  linkToOption.addEventListener('click', () => {
-    chrome.tabs.create({'url': "/src/options.html" });
-  });
-
-  fillCards();
-
-});
 
 function getChannels(callback) {
   chrome.storage.sync.get("channels", (items) => {
@@ -100,3 +76,13 @@ function createCard(item) {
 
   return cardDiv;
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const linkToOption = document.getElementById('link-to-options');
+  linkToOption.addEventListener('click', () => {
+    chrome.tabs.create({'url': "/src/options.html" });
+  });
+
+  fillCards();
+
+});
