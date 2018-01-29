@@ -30,6 +30,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  const importDataButton = document.getElementById("import-data");
+  importDataButton.addEventListener("click", () => {
+    const textarea = document.getElementById("import-export-data");
+    saveChannels(JSON.parse(textarea.value));
+    fillTable(table);
+  });
+
+  const exportDataButton = document.getElementById("export-data");
+  exportDataButton.addEventListener("click", () => {
+    getChannels((data) => {
+      const textarea = document.getElementById("import-export-data");
+      textarea.value = JSON.stringify(data);
+    });
+  });
+
   const table = document.getElementById("myTable");
   fillTable(table);
 });
