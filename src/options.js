@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const table = document.getElementById("myTable");
 
   const addButton = document.getElementById('addButton');
   addButton.addEventListener('click', () => {
@@ -45,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  const table = document.getElementById("myTable");
   fillTable(table);
 });
 
