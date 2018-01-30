@@ -45,9 +45,8 @@ function insertRow(table, name = "", url = "", category="") {
   let textButton = document.createTextNode("-");
   deleteButton.appendChild(textButton);
   deleteButton.setAttribute('class', 'removeButton btn btn-danger');
-  deleteButton.setAttribute('data-row', table.rows.length - 1);
   deleteButton.addEventListener("click", (e) => {
-    deleteRow(table, e.target);
+    deleteRow(e.target);
   });
   cell1.appendChild(deleteButton);
   cell1.setAttribute('scope', "row");
@@ -63,8 +62,9 @@ function insertRow(table, name = "", url = "", category="") {
   cell4.innerHTML = "<input class='form-control' type='text' id='category' name='category' placeholder='Personnal' value='"+category+"'>";
 }
 
-function deleteRow(table, button) {
-  table.deleteRow(button.dataset.row);
+function deleteRow(button) {
+  const tr = button.parentNode.parentElement;
+  tr.remove();
 }
 
 function fillTable(table) {
