@@ -1,7 +1,7 @@
 const redirections = [
   {title: "dashboard", url: "https://www.youtube.com/dashboard?o=U", icon: "fa fa-home"},
   {title: "channel", url: "https://www.youtube.com/features", icon: "fa fa-television"},
-  {title: "analytics", url: "ttps://www.youtube.com/analytics?o=U", icon: "fa fa-bar-chart"},
+  {title: "analytics", url: "https://www.youtube.com/analytics?o=U", icon: "fa fa-bar-chart"},
   {title: "video", url: "https://www.youtube.com/my_videos?o=U", icon: "fa fa-youtube-play"},
   {title: "playlist", url: "https://www.youtube.com/view_all_playlists", icon: "fa fa-list"}
 ];
