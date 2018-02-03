@@ -15,3 +15,7 @@ body {
 .red-text {
   color: #cc181e;
 }
+
+.card-block {
+  padding: 0.50rem;
+}
