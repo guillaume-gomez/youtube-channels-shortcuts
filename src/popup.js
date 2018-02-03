@@ -1,3 +1,5 @@
+const maxLength = 40;
+
 const redirections = [
   {title: "dashboard", url: "https://www.youtube.com/dashboard?o=U", icon: "fa fa-home"},
   {title: "channel", url: "https://www.youtube.com/features", icon: "fa fa-television"},
@@ -58,7 +60,8 @@ function createDeck(name) {
 
   let p = document.createElement("p");
   p.setAttribute('class', 'badge badge-pill badge-default');
-  const contentText = document.createTextNode(name);
+  const nameFiltered = (name.length > maxLength) ? name.substring(0, maxLength - 3) + "..." : name;
+  const contentText = document.createTextNode(nameFiltered);
   p.appendChild(contentText);
 
   let hr = document.createElement("hr");
@@ -97,7 +100,8 @@ function createCard(item) {
 
   let cardTitle = document.createElement("span");
   cardTitle.setAttribute('class', 'card-title channel-name red-text');
-  let cardTitleText = document.createTextNode(item.name + " ");
+  const nameFiltered = (item.name.length > maxLength) ? item.name.substring(0, maxLength - 3) + "..." : item.name;
+  let cardTitleText = document.createTextNode(nameFiltered + " ");
   cardTitle.appendChild(cardTitleText);
 
   cardDiv.appendChild(cardBloclDiv);
