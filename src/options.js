@@ -41,15 +41,7 @@ function insertRow(table, name = "", url = "", category="") {
   let cell3 = row.insertCell(2);
   let cell4 = row.insertCell(3);
 
-  let deleteButton = document.createElement("BUTTON");
-  let textButton = document.createTextNode("-");
-  deleteButton.appendChild(textButton);
-  deleteButton.setAttribute('class', 'removeButton btn btn-danger');
-  deleteButton.addEventListener("click", (e) => {
-    deleteRow(e.target);
-  });
-  cell1.appendChild(deleteButton);
-  cell1.setAttribute('scope', "row");
+  cell1.innerHTML = "<input class='form-control' type='text' id='category' name='category' placeholder='Personnal' value='"+category+"'>";
 
   let input = document.createElement("input");
   input.setAttribute('type', "text");
@@ -59,7 +51,16 @@ function insertRow(table, name = "", url = "", category="") {
   cell2.appendChild(input);
 
   cell3.innerHTML = "<input class='form-control' type='text' id='url' name='name' placeholder='https://www.youtube.com/signin?feature=masthead_switcher&next=%2Fdashboard%3Fo%3DU&action_handle_signin=true&authuser=0&skip_identity_prompt=False' value='"+url+"'>";
-  cell4.innerHTML = "<input class='form-control' type='text' id='category' name='category' placeholder='Personnal' value='"+category+"'>";
+
+  let deleteButton = document.createElement("BUTTON");
+  let textButton = document.createTextNode("-");
+  deleteButton.appendChild(textButton);
+  deleteButton.setAttribute('class', 'removeButton btn btn-danger');
+  deleteButton.addEventListener("click", (e) => {
+    deleteRow(e.target);
+  });
+  cell4.appendChild(deleteButton);
+  cell4.setAttribute('scope', "row");
 }
 
 function deleteRow(button) {
