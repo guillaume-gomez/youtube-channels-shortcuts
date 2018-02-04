@@ -104,3 +104,46 @@ function addNotification(message, type, timer) {
       notifDiv.innerHTML = "";
     }, timer);
 }
+
+function categories(channels) {
+  const categories = channels.map((channel) => {
+    return channel.category;
+  });
+  return _.uniq(categories);
+}
+
+function fillCategoriesTable(table) {
+  getChannels( (channels) => {
+    categories(channels).forEach(category => {
+      inserRowCategories(table, category);
+    });
+  });
+}
+
+function inserRowCategories(table, category) {
+  let row = table.insertRow();
+  let cell1 = row.insertCell(0);
+  let cell2 = row.insertCell(1);
+
+  cell1.innerHTML = "<input class='form-control' type='text' id='category' name='category' placeholder='Personnal' value='"+category+"'>";
+
+  let upButton = document.createElement("BUTTON");
+  let textButton = document.createTextNode("Up");
+  upButton.appendChild(textButton);
+  upButton.setAttribute('class', 'btn btn-default');
+  upButton.addEventListener("click", (e) => {
+    //moveUp(e.target);
+  });
+
+  let downButton = document.createElement("BUTTON");
+  textButton = document.createTextNode("Down");
+  downButton.appendChild(textButton);
+  downButton.setAttribute('class', 'btn btn-default');
+  downButton.addEventListener("click", (e) => {
+    //moveUp(e.target);
+  });
+
+  cell2.appendChild(upButton);
+  cell2.appendChild(downButton);
+  cell2.setAttribute('scope', "row");
+}
