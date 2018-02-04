@@ -2,8 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const addButton = document.getElementById('addButton');
   addButton.addEventListener('click', () => {
-    const table =  document.getElementById("myTable");
-    insertRow(table);
+    const table =  document.getElementById("main-table");
+    insertRowMainTable(table);
   });
 
   const saveButton = document.getElementById('saveButton');
@@ -30,27 +30,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  const table = document.getElementById("myTable");
-  fillTable(table);
+  const table = document.getElementById("main-table");
+  fillMainOptionTable(table);
+
+  const categoryTable = document.getElementById("categoriesTable");
+  fillCategoriesTable(categoryTable);
 });
 
-function insertRow(table, name = "", url = "", category="") {
+function insertRowMainTable(table, name = "", url = "", category="") {
   let row = table.insertRow();
   let cell1 = row.insertCell(0);
   let cell2 = row.insertCell(1);
   let cell3 = row.insertCell(2);
   let cell4 = row.insertCell(3);
 
-  cell1.innerHTML = "<input class='form-control' type='text' id='category' name='category' placeholder='Personnal' value='"+category+"'>";
 
   let input = document.createElement("input");
   input.setAttribute('type', "text");
   input.setAttribute('class', "form-control");
   input.setAttribute('value', name);
   input.setAttribute('placeholder', 'My awesome channel');
-  cell2.appendChild(input);
+  cell1.appendChild(input);
 
-  cell3.innerHTML = "<input class='form-control' type='text' id='url' name='name' placeholder='https://www.youtube.com/signin?feature=masthead_switcher&next=%2Fdashboard%3Fo%3DU&action_handle_signin=true&authuser=0&skip_identity_prompt=False' value='"+url+"'>";
+  cell2.innerHTML = "<input class='form-control' type='text' id='url' name='name' placeholder='https://www.youtube.com/signin?feature=masthead_switcher&next=%2Fdashboard%3Fo%3DU&action_handle_signin=true&authuser=0&skip_identity_prompt=False' value='"+url+"'>";
+  cell3.innerHTML = "<input class='form-control' type='text' id='category' name='category' placeholder='Personnal' value='"+category+"'>";
 
   let deleteButton = document.createElement("BUTTON");
   let textButton = document.createTextNode("-");
@@ -68,15 +71,16 @@ function deleteRow(button) {
   tr.remove();
 }
 
-function fillTable(table) {
+function fillMainOptionTable(table) {
   getChannels( (channels) => {
     if(channels) {
       channels.forEach(param => {
-        insertRow(table, param.name, param.url, param.category);
+        insertRowMainTable(table, param.name, param.url, param.category);
       });
     }
   });
 }
+
 
 function getChannels(callback) {
   // See https://developer.chrome.com/apps/storage#type-StorageArea. We check
