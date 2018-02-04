@@ -103,7 +103,7 @@ function inserRowCategories(table, category) {
   upButton.appendChild(textButton);
   upButton.setAttribute('class', 'btn btn-outline-primary');
   upButton.addEventListener("click", (e) => {
-    //moveUp(e.target);
+    moveRowUp(e.target);
   });
 
   let downButton = document.createElement("BUTTON");
@@ -111,7 +111,7 @@ function inserRowCategories(table, category) {
   downButton.appendChild(textButton);
   downButton.setAttribute('class', 'btn btn-outline-primary');
   downButton.addEventListener("click", (e) => {
-    //moveUp(e.target);
+    moveRowDown(e.target);
   });
 
   divButtons.appendChild(upButton);
@@ -163,4 +163,26 @@ function fillMainOptionTable(table) {
       });
     }
   });
+}
+
+function moveRowUp(button) {
+  const row = button.parentNode.parentNode.parentNode;
+  const sibling = row.previousElementSibling;
+  const parent = row.parentNode;
+
+  if(sibling.rowIndex == 0) {
+    return;
+  }
+  parent.insertBefore(row, sibling);
+}
+
+function moveRowDown(button) {
+  const row = button.parentNode.parentNode.parentNode;
+  const anchor = row.nextElementSibling;
+  const parent = row.parentNode;
+
+  if(!anchor) {
+    return;
+  }
+  parent.insertBefore(anchor, row);
 }
