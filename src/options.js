@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveButton = document.getElementById('saveButton');
   saveButton.addEventListener('click', () => {
     saveChannels();
+    saveCategories();
   });
 
   const table = document.getElementById("main-table");
@@ -19,9 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function getChannels(callback) {
-  // See https://developer.chrome.com/apps/storage#type-StorageArea. We check
-  // for chrome.runtime.lastError to ensure correctness even when the API call
-  // fails.
   chrome.storage.sync.get("channels", (items) => {
     callback(chrome.runtime.lastError ? null : items["channels"]);
   });
@@ -29,10 +27,10 @@ function getChannels(callback) {
 
 function saveChannels() {
   const inputs = document.getElementsByTagName('input');
-    let channels = [];
-    let error = false;
-    const rowSize = 3;
-    for(let i = 0; i < (inputs.length / rowSize); ++i) {
+  let channels = [];
+  let error = false;
+  const rowSize = 3;
+  for(let i = 0; i < (inputs.length / rowSize); ++i) {
 
       const name = inputs[rowSize * i].value;
       const url = inputs[(rowSize * i) + 1].value;
@@ -52,25 +50,22 @@ function saveChannels() {
   }
 }
 
-function saveCategories(categories) {
+function saveCategories() {
+  const categoriesTags = document.getElementsByClassName("category-name");
+  const categories = [].slice.call(categoriesTags).map((category, index) => {
+    return {position: index + 1, name: category.innerHTML};
+  });
+  console.log(categories);
   chrome.storage.sync.set({categories}, () => {
     addNotification("Successfully saved !", "success", 3000);
   });
 }
 
-function getCategories(channels) {
-  const categories = channels.map((channel) => {
-    return channel.category;
-  });
-  return _.uniq(categories);
-}
-
-function saveCategories(categories) {
-  chrome.storage.sync.set({categories}, () => {
-    // nothing to do
+function getCategories(callback) {
+  chrome.storage.sync.get("categories", (items) => {
+    callback(chrome.runtime.lastError ? null : items["categories"]);
   });
 }
-
 
 function addNotification(message, type, timer) {
   const notifDiv = document.getElementById('notification');
@@ -82,11 +77,9 @@ function addNotification(message, type, timer) {
 
 
 function fillCategoriesTable(table) {
-  getChannels((channels) => {
-    //console.log(channels);
-    getCategories(channels).forEach((category, index) => {
-      const enrichedCategories = { position: index + 1, name: category }
-      inserRowCategories(table, enrichedCategories);
+  getCategories((categories) => {
+    categories.forEach((category, index) => {
+      inserRowCategories(table, category);
     });
   });
 }
