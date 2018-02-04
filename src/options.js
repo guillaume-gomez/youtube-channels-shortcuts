@@ -55,9 +55,8 @@ function saveCategories() {
   const categories = [].slice.call(categoriesTags).map((category, index) => {
     return {position: index + 1, name: category.innerHTML};
   });
-  console.log(categories);
   chrome.storage.sync.set({categories}, () => {
-    addNotification("Successfully saved !", "success", 3000);
+    //addNotification("Successfully saved !", "success", 3000);
   });
 }
 
