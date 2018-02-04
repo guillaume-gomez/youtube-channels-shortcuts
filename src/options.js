@@ -46,28 +46,14 @@ function saveChannels() {
       }
     }
     if(!error) {
-      saveChannels(channels);
-    }
-  });
-
-  const table = document.getElementById("main-table");
-  fillMainOptionTable(table);
-
-  const categoryTable = document.getElementById("categoriesTable");
-  fillCategoriesTable(categoryTable);
-});
-
-function getChannels(callback) {
-  // See https://developer.chrome.com/apps/storage#type-StorageArea. We check
-  // for chrome.runtime.lastError to ensure correctness even when the API call
-  // fails.
-  chrome.storage.sync.get("channels", (items) => {
-    callback(chrome.runtime.lastError ? null : items["channels"]);
-  });
+    chrome.storage.sync.set({channels}, () => {
+      addNotification("Successfully saved !", "success", 3000);
+    });
+  }
 }
 
-function saveChannels(items) {
-  chrome.storage.sync.set({channels: items}, () => {
+function saveCategories(categories) {
+  chrome.storage.sync.set({categories}, () => {
     addNotification("Successfully saved !", "success", 3000);
   });
 }
@@ -96,10 +82,11 @@ function addNotification(message, type, timer) {
 
 
 function fillCategoriesTable(table) {
-  getChannels( (channels) => {
-    console.log(channels);
-    get(channels).forEach(category => {
-      inserRowCategories(table, category);
+  getChannels((channels) => {
+    //console.log(channels);
+    getCategories(channels).forEach((category, index) => {
+      const enrichedCategories = { position: index + 1, name: category }
+      inserRowCategories(table, enrichedCategories);
     });
   });
 }
@@ -108,8 +95,13 @@ function inserRowCategories(table, category) {
   let row = table.insertRow();
   let cell1 = row.insertCell(0);
   let cell2 = row.insertCell(1);
+  let cell3 = row.insertCell(2);
 
-  cell1.innerHTML = "<input class='form-control' type='text' id='category' name='category' placeholder='Personnal' value='"+category+"'>";
+  cell1.innerHTML = category.position;
+  cell1.setAttribute('class', "category-position");
+
+  cell2.innerHTML = category.name;
+  cell2.setAttribute('class', "category-name");
 
   let divButtons = document.createElement("div");
   divButtons.setAttribute('class', 'col-md-12');
@@ -133,8 +125,8 @@ function inserRowCategories(table, category) {
   divButtons.appendChild(upButton);
   divButtons.appendChild(downButton);
 
-  cell2.appendChild(divButtons);
-  cell2.setAttribute('scope', "row");
+  cell3.appendChild(divButtons);
+  cell3.setAttribute('scope', "row");
 }
 
 function insertRowMainTable(table, name = "", url = "", category="") {
