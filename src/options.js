@@ -37,6 +37,86 @@ document.addEventListener('DOMContentLoaded', () => {
   fillCategoriesTable(categoryTable);
 });
 
+function getChannels(callback) {
+  // See https://developer.chrome.com/apps/storage#type-StorageArea. We check
+  // for chrome.runtime.lastError to ensure correctness even when the API call
+  // fails.
+  chrome.storage.sync.get("channels", (items) => {
+    callback(chrome.runtime.lastError ? null : items["channels"]);
+  });
+}
+
+function saveChannels(items) {
+  chrome.storage.sync.set({channels: items}, () => {
+    addNotification("Successfully saved !", "success", 3000);
+  });
+}
+
+function getCategories(channels) {
+  const categories = channels.map((channel) => {
+    return channel.category;
+  });
+  return _.uniq(categories);
+}
+
+function saveCategories(categories) {
+  chrome.storage.sync.set({categories}, () => {
+    // nothing to do
+  });
+}
+
+
+function addNotification(message, type, timer) {
+  const notifDiv = document.getElementById('notification');
+    notifDiv.innerHTML += "<div class='alert alert-"+type+"' role='alert'>"+message+"</div>";
+    setTimeout(() => {
+      notifDiv.innerHTML = "";
+    }, timer);
+}
+
+
+function fillCategoriesTable(table) {
+  getChannels( (channels) => {
+    console.log(channels);
+    get(channels).forEach(category => {
+      inserRowCategories(table, category);
+    });
+  });
+}
+
+function inserRowCategories(table, category) {
+  let row = table.insertRow();
+  let cell1 = row.insertCell(0);
+  let cell2 = row.insertCell(1);
+
+  cell1.innerHTML = "<input class='form-control' type='text' id='category' name='category' placeholder='Personnal' value='"+category+"'>";
+
+  let divButtons = document.createElement("div");
+  divButtons.setAttribute('class', 'col-md-12');
+
+  let upButton = document.createElement("BUTTON");
+  let textButton = document.createTextNode("Up");
+  upButton.appendChild(textButton);
+  upButton.setAttribute('class', 'btn btn-outline-primary');
+  upButton.addEventListener("click", (e) => {
+    //moveUp(e.target);
+  });
+
+  let downButton = document.createElement("BUTTON");
+  textButton = document.createTextNode("Down");
+  downButton.appendChild(textButton);
+  downButton.setAttribute('class', 'btn btn-outline-primary');
+  downButton.addEventListener("click", (e) => {
+    //moveUp(e.target);
+  });
+
+  divButtons.appendChild(upButton);
+  divButtons.appendChild(downButton);
+
+  cell2.appendChild(divButtons);
+  cell2.setAttribute('scope', "row");
+}
+
 function insertRowMainTable(table, name = "", url = "", category="") {
   let row = table.insertRow();
   let cell1 = row.insertCell(0);
@@ -79,71 +159,4 @@ function fillMainOptionTable(table) {
       });
     }
   });
-}
-
-
-function getChannels(callback) {
-  // See https://developer.chrome.com/apps/storage#type-StorageArea. We check
-  // for chrome.runtime.lastError to ensure correctness even when the API call
-  // fails.
-  chrome.storage.sync.get("channels", (items) => {
-    callback(chrome.runtime.lastError ? null : items["channels"]);
-  });
-}
-
-function saveChannels(items) {
-  chrome.storage.sync.set({channels: items}, () => {
-    addNotification("Successfully saved !", "success", 3000);
-  });
-}
-
-function addNotification(message, type, timer) {
-  const notifDiv = document.getElementById('notification');
-    notifDiv.innerHTML += "<div class='alert alert-"+type+"' role='alert'>"+message+"</div>";
-    setTimeout(() => {
-      notifDiv.innerHTML = "";
-    }, timer);
-}
-
-function categories(channels) {
-  const categories = channels.map((channel) => {
-    return channel.category;
-  });
-  return _.uniq(categories);
-}
-
-function fillCategoriesTable(table) {
-  getChannels( (channels) => {
-    categories(channels).forEach(category => {
-      inserRowCategories(table, category);
-    });
-  });
-}
-
-function inserRowCategories(table, category) {
-  let row = table.insertRow();
-  let cell1 = row.insertCell(0);
-  let cell2 = row.insertCell(1);
-
-  cell1.innerHTML = "<input class='form-control' type='text' id='category' name='category' placeholder='Personnal' value='"+category+"'>";
-
-  let upButton = document.createElement("BUTTON");
-  let textButton = document.createTextNode("Up");
-  upButton.appendChild(textButton);
-  upButton.setAttribute('class', 'btn btn-default');
-  upButton.addEventListener("click", (e) => {
-    //moveUp(e.target);
-  });
-
-  let downButton = document.createElement("BUTTON");
-  textButton = document.createTextNode("Down");
-  downButton.appendChild(textButton);
-  downButton.setAttribute('class', 'btn btn-default');
-  downButton.addEventListener("click", (e) => {
-    //moveUp(e.target);
-  });
-
-  cell2.appendChild(upButton);
-  cell2.appendChild(downButton);
-  cell2.setAttribute('scope', "row");
 }
