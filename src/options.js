@@ -8,7 +8,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const saveButton = document.getElementById('saveButton');
   saveButton.addEventListener('click', () => {
-    const inputs = document.getElementsByTagName('input');
+    saveChannels();
+  });
+
+  const table = document.getElementById("main-table");
+  fillMainOptionTable(table);
+
+  const categoryTable = document.getElementById("categoriesTable");
+  fillCategoriesTable(categoryTable);
+});
+
+function getChannels(callback) {
+  // See https://developer.chrome.com/apps/storage#type-StorageArea. We check
+  // for chrome.runtime.lastError to ensure correctness even when the API call
+  // fails.
+  chrome.storage.sync.get("channels", (items) => {
+    callback(chrome.runtime.lastError ? null : items["channels"]);
+  });
+}
+
+function saveChannels() {
+  const inputs = document.getElementsByTagName('input');
     let channels = [];
     let error = false;
     const rowSize = 3;
