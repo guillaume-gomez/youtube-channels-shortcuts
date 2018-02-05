@@ -22,6 +22,12 @@ function getChannels(callback) {
   });
 }
 
+function getCategories(callback) {
+  chrome.storage.sync.get("categories", (items) => {
+    callback(chrome.runtime.lastError ? null : items["categories"]);
+  });
+}
+
 
 function fillCards() {
   let cardDeckContainer = document.getElementById('cards-container');
@@ -37,7 +43,6 @@ function fillCards() {
     }
   });
 }
-
 
 function sortChannelByCategory(channels) {
   let channelsByCategory = {};
