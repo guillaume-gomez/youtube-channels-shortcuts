@@ -32,19 +32,31 @@ function getCategories(callback) {
 function fillCards() {
   let cardDeckContainer = document.getElementById('cards-container');
   getChannels((channels) => {
-    if(channels) {
-      Object.entries(sortChannelByCategory(channels)).forEach(([category, channelsArray]) => {
-        let cardDeck = createDeck(category);
-        cardDeckContainer.appendChild(cardDeck);
-        channelsArray.forEach(channel => {
-          cardDeck.appendChild(createCard(channel));
+    getCategories((categories) => {
+      if(channels && categories) {
+        const sortedChannelsByCategory = sortChannelsByCategory(channels);
+        sortCategories(categories).forEach((category) => {
+          let cardDeck = createDeck(category);
+          cardDeckContainer.appendChild(cardDeck);
+          sortedChannelsByCategory[category].forEach(channel => {
+            cardDeck.appendChild(createCard(channel));
+          });
         });
-      });
-    }
+      }
+      console.log(categories);
+    });
   });
+
 }
 
-function sortChannelByCategory(channels) {
+function sortCategories(categories) {
+  const sortedCategories = Object.values(categories).sort((a,b) => {
+    return a.position > b.position;
+  });
+  return sortedCategories.map(categoryObj => categoryObj.name);
+}
+
+function sortChannelsByCategory(channels) {
   let channelsByCategory = {};
   channels.forEach(channel => {
     if(channelsByCategory[channel.category]) {
