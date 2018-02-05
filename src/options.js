@@ -62,6 +62,15 @@ function addNotification(message, type, timer) {
     }, timer);
 }
 
+function fillMainOptionTable(table) {
+  getChannels( (channels) => {
+    if(channels) {
+      channels.forEach(param => {
+        insertRowMainTable(table, param.name, param.url, param.category);
+      });
+    }
+  });
+}
 
 function fillCategoriesTable(table) {
   getCategories((categories) => {
@@ -143,15 +152,6 @@ function deleteRow(button) {
   tr.remove();
 }
 
-function fillMainOptionTable(table) {
-  getChannels( (channels) => {
-    if(channels) {
-      channels.forEach(param => {
-        insertRowMainTable(table, param.name, param.url, param.category);
-      });
-    }
-  });
-}
 
 function moveRowUp(button) {
   const row = button.parentNode.parentNode.parentNode;
