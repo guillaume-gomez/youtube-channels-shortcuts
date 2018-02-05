@@ -19,12 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
   fillCategoriesTable(categoryTable);
 });
 
-function getChannels(callback) {
-  chrome.storage.sync.get("channels", (items) => {
-    callback(chrome.runtime.lastError ? null : items["channels"]);
-  });
-}
-
 function saveChannels() {
   const inputs = document.getElementsByTagName('input');
   let channels = [];
@@ -57,12 +51,6 @@ function saveCategories() {
   });
   chrome.storage.sync.set({categories}, () => {
     //addNotification("Successfully saved !", "success", 3000);
-  });
-}
-
-function getCategories(callback) {
-  chrome.storage.sync.get("categories", (items) => {
-    callback(chrome.runtime.lastError ? null : items["categories"]);
   });
 }
 

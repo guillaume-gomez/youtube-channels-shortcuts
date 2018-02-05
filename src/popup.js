@@ -16,19 +16,6 @@ function connectToChannel(url, redirection = redirections[0].url) {
   chrome.tabs.update({url: url});
 }
 
-function getChannels(callback) {
-  chrome.storage.sync.get("channels", (items) => {
-    callback(chrome.runtime.lastError ? null : items["channels"]);
-  });
-}
-
-function getCategories(callback) {
-  chrome.storage.sync.get("categories", (items) => {
-    callback(chrome.runtime.lastError ? null : items["categories"]);
-  });
-}
-
-
 function fillCards() {
   let cardDeckContainer = document.getElementById('cards-container');
   getChannels((channels) => {
@@ -43,7 +30,6 @@ function fillCards() {
           });
         });
       }
-      console.log(categories);
     });
   });
 
