@@ -12,11 +12,15 @@ document.addEventListener('DOMContentLoaded', () => {
     saveCategories();
   });
 
+
   const table = document.getElementById("main-table");
   fillMainOptionTable(table);
 
-  const categoryTable = document.getElementById("categoriesTable");
-  fillCategoriesTable(categoryTable);
+  const categoriesTable = document.getElementById("categories-table");
+  fillCategoriesTable(categoriesTable);
+
+  const actionsTable = document.getElementById("actions-table")
+  fillActionsTable(actionsTable);
 });
 
 function saveChannels() {
@@ -76,6 +80,14 @@ function fillCategoriesTable(table) {
   getCategories((categories) => {
     categories.forEach((category, index) => {
       inserRowCategories(table, category);
+    });
+  });
+}
+
+function fillActionsTable(table) {
+  getActions((actions) => {
+    actions.forEach(action =>{
+      insertRowAction(table, action);
     });
   });
 }
@@ -145,6 +157,15 @@ function insertRowMainTable(table, name = "", url = "", category="") {
   });
   cell4.appendChild(deleteButton);
   cell4.setAttribute('scope', "row");
+}
+
+function insertRowAction(table, action) {
+  let row = table.insertRow();
+  let cell1 = row.insertCell(0);
+  let cell2 = row.insertCell(1);
+
+  cell1.innerHTML = action.title;
+  cell2.innerHTML = "<input class='form-check-input' type='checkbox' value='"+action.enabled+"' checked='"+action.enabled+"'>";
 }
 
 function deleteRow(button) {
