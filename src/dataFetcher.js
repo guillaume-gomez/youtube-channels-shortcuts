@@ -20,7 +20,8 @@ function getActions(callback) {
   ];
 
   chrome.storage.sync.get("actions", (items) => {
-    const actions = _.uniq(defaultActions.concat(_.compact(items["actions"])));
+    const allActions = _.compact(items["actions"].concat(defaultActions));
+    const actions = _.uniqBy(allActions, "title");
     callback(chrome.runtime.lastError ? null : actions);
   });
 }
