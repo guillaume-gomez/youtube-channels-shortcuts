@@ -165,7 +165,7 @@ function insertRowAction(table, action) {
   let cell2 = row.insertCell(1);
 
   cell1.innerHTML = action.title;
-  cell2.innerHTML = "<input class='form-check-input' type='checkbox' value='"+action.enabled+"' checked='"+action.enabled+"'>";
+  cell2.innerHTML = "<input class='form-check' type='checkbox' value='"+action.enabled+"' checked='"+action.enabled+"' data-title='"+action.title+"' class='toggle-actions'>";
 }
 
 function deleteRow(button) {
