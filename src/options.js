@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   saveButton.addEventListener('click', () => {
     saveChannels();
     saveCategories();
+    saveActions();
   });
 
 
@@ -24,12 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function saveChannels() {
-  const inputs = document.getElementsByTagName('input');
+  const inputs = document.getElementsByClassName('channel-input');
   let channels = [];
   let error = false;
   const rowSize = 3;
   for(let i = 0; i < (inputs.length / rowSize); ++i) {
-
       const name = inputs[rowSize * i].value;
       const url = inputs[(rowSize * i) + 1].value;
       const category = inputs[(rowSize * i) + 2].value || "Personnal";
@@ -55,6 +55,19 @@ function saveCategories() {
   });
   chrome.storage.sync.set({categories}, () => {
     //addNotification("Successfully saved !", "success", 3000);
+  });
+}
+
+function saveActions() {
+  const actionCheckboxes = document.getElementsByClassName("toggle-actions");
+  getActions( actions => {
+    const newActions = [].slice.call(actionCheckboxes).map((action) => {
+      const actionHash = actions.find(actionObj => actionObj.title === action.dataset.title);
+      return Object.assign({}, actionHash, { enabled: action.checked });
+    });
+    chrome.storage.sync.set({actions: newActions}, () => {
+      //addNotification("Successfully saved !", "success", 3000);
+    });
   });
 }
 
@@ -140,13 +153,13 @@ function insertRowMainTable(table, name = "", url = "", category="") {
 
   let input = document.createElement("input");
   input.setAttribute('type', "text");
-  input.setAttribute('class', "form-control");
+  input.setAttribute('class', "form-control channel-input");
   input.setAttribute('value', name);
   input.setAttribute('placeholder', 'My awesome channel');
   cell1.appendChild(input);
 
-  cell2.innerHTML = "<input class='form-control' type='text' id='url' name='name' placeholder='https://www.youtube.com/signin?feature=masthead_switcher&next=%2Fdashboard%3Fo%3DU&action_handle_signin=true&authuser=0&skip_identity_prompt=False' value='"+url+"'>";
-  cell3.innerHTML = "<input class='form-control' type='text' id='category' name='category' placeholder='Personnal' value='"+category+"'>";
+  cell2.innerHTML = "<input class='form-control channel-input' type='text' id='url' name='name' placeholder='https://www.youtube.com/signin?feature=masthead_switcher&next=%2Fdashboard%3Fo%3DU&action_handle_signin=true&authuser=0&skip_identity_prompt=False' value='"+url+"'>";
+  cell3.innerHTML = "<input class='form-control channel-input' type='text' id='category' name='category' placeholder='Personnal' value='"+category+"'>";
 
   let deleteButton = document.createElement("BUTTON");
   let textButton = document.createTextNode("-");
@@ -165,7 +178,11 @@ function insertRowAction(table, action) {
   let cell2 = row.insertCell(1);
 
   cell1.innerHTML = action.title;
-  cell2.innerHTML = "<input class='form-check' type='checkbox' value='"+action.enabled+"' checked='"+action.enabled+"' data-title='"+action.title+"' class='toggle-actions'>";
+  if(action.enabled) {
+    cell2.innerHTML = "<input class='form-check toggle-actions' type='checkbox' value='"+action.enabled+"' checked data-title='"+action.title+"'>";
+  } else {
+    cell2.innerHTML = "<input class='form-check toggle-actions' type='checkbox' value='"+action.enabled+"' data-title='"+action.title+"'>";
+  }
 }
 
 function deleteRow(button) {
