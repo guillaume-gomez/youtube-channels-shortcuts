@@ -1,14 +1,6 @@
 const maxLength = 40;
 
-const redirections = [
-  {title: "dashboard", url: "https://www.youtube.com/dashboard?o=U", icon: "fa fa-home"},
-  {title: "channel", url: "https://www.youtube.com/features", icon: "fa fa-television"},
-  {title: "analytics", url: "https://www.youtube.com/analytics?o=U", icon: "fa fa-bar-chart"},
-  {title: "video", url: "https://www.youtube.com/my_videos?o=U", icon: "fa fa-youtube-play"},
-  {title: "playlist", url: "https://www.youtube.com/view_all_playlists", icon: "fa fa-list"}
-];
-
-function connectToChannel(url, redirection = redirections[0].url) {
+function connectToChannel(url, redirection) {
   setTimeout(function() {
     chrome.tabs.update({url: redirection});
     window.close();
@@ -115,8 +107,12 @@ function createCard(item) {
   buttonGroup.setAttribute('role', 'group')
   cardBloclDiv.appendChild(buttonGroup);
 
-  redirections.forEach(params => {
-    buttonGroup.appendChild(createActionInCard(item.url, params));
+  getActions(actions => {
+    actions.forEach(action => {
+      if(action.enabled) {
+        buttonGroup.appendChild(createActionInCard(item.url, action));
+      }
+    });
   });
 
   return cardDiv;
