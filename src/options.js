@@ -17,29 +17,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-
-  const table = document.getElementById("main-table");
-  fillMainOptionTable(table);
-
-  const categoriesTable = document.getElementById("categories-table");
-  fillCategoriesTable(categoriesTable);
-
-  const actionsTable = document.getElementById("actions-table")
-  fillActionsTable(actionsTable);
-
+  fillTables();
 
   const importDataButton = document.getElementById("import-data");
   importDataButton.addEventListener("click", () => {
     const textarea = document.getElementById("import-export-data");
-    //saveChannels(JSON.parse(textarea.value));
-    //fillTable(table);
+    const data = JSON.parse(textarea.value);
+    importData(data);
+    fillTables();
   });
 
   const exportDataButton = document.getElementById("export-data");
   exportDataButton.addEventListener("click", () => {
-    getChannels((data) => {
-      const textarea = document.getElementById("import-export-data");
-      textarea.value = JSON.stringify(data);
+    getChannels((channels) => {
+      getCategories(categories => {
+        getActions((actions) => {
+          const textarea = document.getElementById("import-export-data");
+          textarea.value = JSON.stringify({ channels, categories, actions });
+        });
+      });
     });
   });
 
@@ -94,6 +90,19 @@ function saveActions() {
   });
 }
 
+function importData(data) {
+  const { channels, categories, actions } = data;
+  chrome.storage.sync.set({channels}, () => {
+    addNotification("Successfully saved !", "success", 3000);
+  });
+  chrome.storage.sync.set({categories}, () => {
+    //addNotification("Successfully saved !", "success", 3000);
+  });
+  chrome.storage.sync.set({actions}, () => {
+    //addNotification("Successfully saved !", "success", 3000);
+  });
+}
+
 function addNotification(message, type, timer) {
   const notifDiv = document.getElementById('notification');
     notifDiv.innerHTML += "<div class='alert alert-"+type+"' role='alert'>"+message+"</div>";
@@ -121,7 +130,6 @@ function fillCategoriesTable(table) {
     });
   });
 }
-
 
 function fillActionsTable(table) {
   clearTbody(table);
@@ -245,4 +253,14 @@ function moveRowDown(button) {
     return;
   }
   parent.insertBefore(anchor, row);
+}
+
+function fillTables() {
+  const mainTable = document.getElementById("main-table");
+  const categoriesTable = document.getElementById("categories-table");
+  const actionsTable = document.getElementById("actions-table")
+  
+  fillMainOptionTable(mainTable);
+  fillCategoriesTable(categoriesTable);
+  fillActionsTable(actionsTable);
 }
