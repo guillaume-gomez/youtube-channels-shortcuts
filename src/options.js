@@ -1,20 +1,52 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const table = document.getElementById("myTable");
-
   const addButton = document.getElementById('addButton');
   addButton.addEventListener('click', () => {
-    const table =  document.getElementById("myTable");
-    insertRow(table);
+    const table =  document.getElementById("main-table");
+    insertRowMainTable(table);
   });
 
   const saveButton = document.getElementById('saveButton');
   saveButton.addEventListener('click', () => {
-    const inputs = document.getElementsByTagName('input');
-    let channels = [];
-    let error = false;
-    const rowSize = 3;
-    for(let i = 0; i < (inputs.length / rowSize); ++i) {
+    saveChannels();
+    saveCategories();
+    saveActions();
+  });
 
+
+  const table = document.getElementById("main-table");
+  fillMainOptionTable(table);
+
+  const categoriesTable = document.getElementById("categories-table");
+  fillCategoriesTable(categoriesTable);
+
+  const actionsTable = document.getElementById("actions-table")
+  fillActionsTable(actionsTable);
+
+
+  const importDataButton = document.getElementById("import-data");
+  importDataButton.addEventListener("click", () => {
+    const textarea = document.getElementById("import-export-data");
+    //saveChannels(JSON.parse(textarea.value));
+    //fillTable(table);
+  });
+
+  const exportDataButton = document.getElementById("export-data");
+  exportDataButton.addEventListener("click", () => {
+    getChannels((data) => {
+      const textarea = document.getElementById("import-export-data");
+      textarea.value = JSON.stringify(data);
+    });
+  });
+
+});
+
+
+function saveChannels() {
+  const inputs = document.getElementsByClassName('channel-input');
+  let channels = [];
+  let error = false;
+  const rowSize = 3;
+  for(let i = 0; i < (inputs.length / rowSize); ++i) {
       const name = inputs[rowSize * i].value;
       const url = inputs[(rowSize * i) + 1].value;
       const category = inputs[(rowSize * i) + 2].value || "Personnal";
@@ -27,83 +59,32 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
     if(!error) {
-      saveChannels(channels);
-    }
-  });
-
-  const importDataButton = document.getElementById("import-data");
-  importDataButton.addEventListener("click", () => {
-    const textarea = document.getElementById("import-export-data");
-    saveChannels(JSON.parse(textarea.value));
-    fillTable(table);
-  });
-
-  const exportDataButton = document.getElementById("export-data");
-  exportDataButton.addEventListener("click", () => {
-    getChannels((data) => {
-      const textarea = document.getElementById("import-export-data");
-      textarea.value = JSON.stringify(data);
+    chrome.storage.sync.set({channels}, () => {
+      addNotification("Successfully saved !", "success", 3000);
     });
-  });
-
-  fillTable(table);
-});
-
-function insertRow(table, name = "", url = "", category="") {
-  let row = table.insertRow();
-  let cell1 = row.insertCell(0);
-  let cell2 = row.insertCell(1);
-  let cell3 = row.insertCell(2);
-  let cell4 = row.insertCell(3);
-
-  let deleteButton = document.createElement("BUTTON");
-  let textButton = document.createTextNode("-");
-  deleteButton.appendChild(textButton);
-  deleteButton.setAttribute('class', 'removeButton btn btn-danger');
-  deleteButton.setAttribute('data-row', table.rows.length - 1);
-  deleteButton.addEventListener("click", (e) => {
-    deleteRow(table, e.target);
-  });
-  cell1.appendChild(deleteButton);
-  cell1.setAttribute('scope', "row");
-
-  let input = document.createElement("input");
-  input.setAttribute('type', "text");
-  input.setAttribute('class', "form-control");
-  input.setAttribute('value', name);
-  input.setAttribute('placeholder', 'My awesome channel');
-  cell2.appendChild(input);
-
-  cell3.innerHTML = "<input class='form-control' type='text' id='url' name='name' placeholder='https://www.youtube.com/signin?feature=masthead_switcher&next=%2Fdashboard%3Fo%3DU&action_handle_signin=true&authuser=0&skip_identity_prompt=False' value='"+url+"'>";
-  cell4.innerHTML = "<input class='form-control' type='text' id='category' name='category' placeholder='Personnal' value='"+category+"'>";
+  }
 }
 
-function deleteRow(table, button) {
-  table.deleteRow(button.dataset.row);
-}
-
-function fillTable(table) {
-  getChannels( (channels) => {
-    if(channels) {
-      channels.forEach(param => {
-        insertRow(table, param.name, param.url, param.category);
-      });
-    }
+function saveCategories() {
+  const categoriesTags = document.getElementsByClassName("category-name");
+  const categories = [].slice.call(categoriesTags).map((category, index) => {
+    return {position: index + 1, name: category.innerHTML};
+  });
+  chrome.storage.sync.set({categories}, () => {
+    //addNotification("Successfully saved !", "success", 3000);
   });
 }
 
-function getChannels(callback) {
-  // See https://developer.chrome.com/apps/storage#type-StorageArea. We check
-  // for chrome.runtime.lastError to ensure correctness even when the API call
-  // fails.
-  chrome.storage.sync.get("channels", (items) => {
-    callback(chrome.runtime.lastError ? null : items["channels"]);
-  });
-}
-
-function saveChannels(items) {
-  chrome.storage.sync.set({channels: items}, () => {
-    addNotification("Successfully saved !", "success", 3000);
+function saveActions() {
+  const actionCheckboxes = document.getElementsByClassName("toggle-actions");
+  getActions( actions => {
+    const newActions = [].slice.call(actionCheckboxes).map((action) => {
+      const actionHash = actions.find(actionObj => actionObj.title === action.dataset.title);
+      return Object.assign({}, actionHash, { enabled: action.checked });
+    });
+    chrome.storage.sync.set({actions: newActions}, () => {
+      //addNotification("Successfully saved !", "success", 3000);
+    });
   });
 }
 
@@ -113,4 +94,139 @@ function addNotification(message, type, timer) {
     setTimeout(() => {
       notifDiv.innerHTML = "";
     }, timer);
+}
+
+function fillMainOptionTable(table) {
+  getChannels( (channels) => {
+    if(channels) {
+      channels.forEach(param => {
+        insertRowMainTable(table, param.name, param.url, param.category);
+      });
+    }
+  });
+}
+
+function fillCategoriesTable(table) {
+  getCategories((categories) => {
+    categories.forEach((category, index) => {
+      inserRowCategories(table, category);
+    });
+  });
+}
+
+
+function fillActionsTable(table) {
+  getActions((actions) => {
+    actions.forEach(action =>{
+      insertRowAction(table, action);
+    });
+  });
+}
+
+function inserRowCategories(table, category) {
+  let row = table.insertRow();
+  let cell1 = row.insertCell(0);
+  let cell2 = row.insertCell(1);
+  let cell3 = row.insertCell(2);
+
+  cell1.innerHTML = category.position;
+  cell1.setAttribute('class', "category-position");
+
+  cell2.innerHTML = category.name;
+  cell2.setAttribute('class', "category-name");
+
+  let divButtons = document.createElement("div");
+  divButtons.setAttribute('class', 'col-md-12');
+
+  let upButton = document.createElement("BUTTON");
+  let textButton = document.createTextNode("Up");
+  upButton.appendChild(textButton);
+  upButton.setAttribute('class', 'btn btn-outline-primary');
+  upButton.addEventListener("click", (e) => {
+    moveRowUp(e.target);
+  });
+
+  let downButton = document.createElement("BUTTON");
+  textButton = document.createTextNode("Down");
+  downButton.appendChild(textButton);
+  downButton.setAttribute('class', 'btn btn-outline-primary');
+  downButton.addEventListener("click", (e) => {
+    moveRowDown(e.target);
+  });
+
+  divButtons.appendChild(upButton);
+  divButtons.appendChild(downButton);
+
+  cell3.appendChild(divButtons);
+  cell3.setAttribute('scope', "row");
+}
+
+function insertRowMainTable(table, name = "", url = "", category="") {
+  let row = table.insertRow();
+  let cell1 = row.insertCell(0);
+  let cell2 = row.insertCell(1);
+  let cell3 = row.insertCell(2);
+  let cell4 = row.insertCell(3);
+
+
+  let input = document.createElement("input");
+  input.setAttribute('type', "text");
+  input.setAttribute('class', "form-control channel-input");
+  input.setAttribute('value', name);
+  input.setAttribute('placeholder', 'My awesome channel');
+  cell1.appendChild(input);
+
+  cell2.innerHTML = "<input class='form-control channel-input' type='text' id='url' name='name' placeholder='https://www.youtube.com/signin?feature=masthead_switcher&next=%2Fdashboard%3Fo%3DU&action_handle_signin=true&authuser=0&skip_identity_prompt=False' value='"+url+"'>";
+  cell3.innerHTML = "<input class='form-control channel-input' type='text' id='category' name='category' placeholder='Personnal' value='"+category+"'>";
+
+  let deleteButton = document.createElement("BUTTON");
+  let textButton = document.createTextNode("-");
+  deleteButton.appendChild(textButton);
+  deleteButton.setAttribute('class', 'removeButton btn btn-danger');
+  deleteButton.addEventListener("click", (e) => {
+    deleteRow(e.target);
+  });
+  cell4.appendChild(deleteButton);
+  cell4.setAttribute('scope', "row");
+}
+
+function insertRowAction(table, action) {
+  let row = table.insertRow();
+  let cell1 = row.insertCell(0);
+  let cell2 = row.insertCell(1);
+
+  cell1.innerHTML = action.title;
+  if(action.enabled) {
+    cell2.innerHTML = "<input class='form-check toggle-actions' type='checkbox' value='"+action.enabled+"' checked data-title='"+action.title+"'>";
+  } else {
+    cell2.innerHTML = "<input class='form-check toggle-actions' type='checkbox' value='"+action.enabled+"' data-title='"+action.title+"'>";
+  }
+}
+
+function deleteRow(button) {
+  const tr = button.parentNode.parentElement;
+  tr.remove();
+}
+
+
+function moveRowUp(button) {
+  const row = button.parentNode.parentNode.parentNode;
+  const sibling = row.previousElementSibling;
+  const parent = row.parentNode;
+
+  if(sibling.rowIndex == 0) {
+    return;
+  }
+  parent.insertBefore(row, sibling);
+}
+
+function moveRowDown(button) {
+  const row = button.parentNode.parentNode.parentNode;
+  const anchor = row.nextElementSibling;
+  const parent = row.parentNode;
+
+  if(!anchor) {
+    return;
+  }
+  parent.insertBefore(anchor, row);
 }

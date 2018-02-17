@@ -7,6 +7,8 @@
     <link href="../css/customcss.css" rel="stylesheet">
     <script src="../js/jquery-3.3.1.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/lodash.js"></script>
+    <script src="dataFetcher.js"></script>
     <script src="options.js"></script>
   </head>
   <body>
@@ -18,23 +20,47 @@
           <div id="notification">
           </div>
         </div>
-        <table id="myTable" class="table table-hover">
+        <table id="main-table" class="table table-hover">
           <thead class="thead-default">
             <tr>
-              <th>Delete</th>
               <th>Channel Name</th>
               <th>Url</th>
               <th>Category</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
           </tbody>
         </table>
       </div>
+      <button class="btn btn-secondary" id="addButton">Add a new row</button>
+      <!--  <button class="btn btn-primary" id="saveButton">Save</button> -->
+      <hr/>
+      <p class="lead">Sort Categories</p>
       <div class="form-group">
-        <button class="btn btn-primary" id="saveButton">Save</button>
-        <button class="btn btn-secondary" id="addButton">Add a new row</button>
+        <table id="categories-table" class="table table-hover">
+          <thead class="thead-default">
+            <th>Position</th>
+            <th>Name</th>
+            <th>Actions</th>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
       </div>
+      <hr/>
+      <p class="lead">Add / Remove actions</p>
+      <div class="form-group">
+        <table id="actions-table" class="table table-hover">
+          <thead class="thead-default">
+            <th>Name</th>
+            <th>Enable/ Disable</th>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn btn-primary" id="saveButton">Save</button>
       <hr/>
       <div class="form-group">
         <label for="inport-export-data">Import / Export</label>

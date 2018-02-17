@@ -1,12 +1,6 @@
-const redirections = [
-  {title: "dashboard", url: "https://www.youtube.com/dashboard?o=U", icon: "fa fa-home"},
-  {title: "channel", url: "https://www.youtube.com/features", icon: "fa fa-television"},
-  {title: "analytics", url: "ttps://www.youtube.com/analytics?o=U", icon: "fa fa-bar-chart"},
-  {title: "video", url: "https://www.youtube.com/my_videos?o=U", icon: "fa fa-youtube-play"},
-  {title: "playlist", url: "https://www.youtube.com/view_all_playlists", icon: "fa fa-list"}
-];
+const maxLength = 40;
 
-function connectToChannel(url, redirection = redirections[0].url) {
+function connectToChannel(url, redirection) {
   setTimeout(function() {
     chrome.tabs.update({url: redirection});
     window.close();
@@ -14,30 +8,33 @@ function connectToChannel(url, redirection = redirections[0].url) {
   chrome.tabs.update({url: url});
 }
 
-function getChannels(callback) {
-  chrome.storage.sync.get("channels", (items) => {
-    callback(chrome.runtime.lastError ? null : items["channels"]);
-  });
-}
-
-
 function fillCards() {
   let cardDeckContainer = document.getElementById('cards-container');
   getChannels((channels) => {
-    if(channels) {
-      Object.entries(sortChannelByCategory(channels)).forEach(([category, channelsArray]) => {
-        let cardDeck = createDeck(category);
-        cardDeckContainer.appendChild(cardDeck);
-        channelsArray.forEach(channel => {
-          cardDeck.appendChild(createCard(channel));
+    getCategories((categories) => {
+      if(channels && categories) {
+        const sortedChannelsByCategory = sortChannelsByCategory(channels);
+        sortCategories(categories).forEach((category) => {
+          let cardDeck = createDeck(category);
+          cardDeckContainer.appendChild(cardDeck);
+          sortedChannelsByCategory[category].forEach(channel => {
+            cardDeck.appendChild(createCard(channel));
+          });
         });
-      });
-    }
+      }
+    });
   });
+
 }
 
+function sortCategories(categories) {
+  const sortedCategories = Object.values(categories).sort((a,b) => {
+    return a.position > b.position;
+  });
+  return sortedCategories.map(categoryObj => categoryObj.name);
+}
 
-function sortChannelByCategory(channels) {
+function sortChannelsByCategory(channels) {
   let channelsByCategory = {};
   channels.forEach(channel => {
     if(channelsByCategory[channel.category]) {
@@ -58,7 +55,8 @@ function createDeck(name) {
 
   let p = document.createElement("p");
   p.setAttribute('class', 'badge badge-pill badge-default');
-  const contentText = document.createTextNode(name);
+  const nameFiltered = (name.length > maxLength) ? name.substring(0, maxLength - 3) + "..." : name;
+  const contentText = document.createTextNode(nameFiltered);
   p.appendChild(contentText);
 
   let hr = document.createElement("hr");
@@ -97,7 +95,8 @@ function createCard(item) {
 
   let cardTitle = document.createElement("span");
   cardTitle.setAttribute('class', 'card-title channel-name red-text');
-  let cardTitleText = document.createTextNode(item.name + " ");
+  const nameFiltered = (item.name.length > maxLength) ? item.name.substring(0, maxLength - 3) + "..." : item.name;
+  let cardTitleText = document.createTextNode(nameFiltered + " ");
   cardTitle.appendChild(cardTitleText);
 
   cardDiv.appendChild(cardBloclDiv);
@@ -108,8 +107,12 @@ function createCard(item) {
   buttonGroup.setAttribute('role', 'group')
   cardBloclDiv.appendChild(buttonGroup);
 
-  redirections.forEach(params => {
-    buttonGroup.appendChild(createActionInCard(item.url, params));
+  getActions(actions => {
+    actions.forEach(action => {
+      if(action.enabled) {
+        buttonGroup.appendChild(createActionInCard(item.url, action));
+      }
+    });
   });
 
   return cardDiv;
