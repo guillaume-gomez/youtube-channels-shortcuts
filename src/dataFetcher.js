@@ -7,16 +7,23 @@ function getChannels(callback) {
 function getCategories(callback) {
   chrome.storage.sync.get("categories", (items) => {
     getChannels((channels) => {
-      const categoriesLocalStorage = items["categories"] || [];
-      let position =  categoriesLocalStorage.length;
+      const categoriesLocalStorage = _.sortBy(items["categories"] || [], "position");
       // from channels
       const newCategoriesName = _.uniq(channels.map(channel => channel.category));
       const newCategories = newCategoriesName.map(channel => {
-        position++;
-        return { position: position, name: channel };
+        return { position: -1, name: channel };
       });
-      const categories = _.uniqBy( categoriesLocalStorage.concat(newCategories), "name");
-      callback(chrome.runtime.lastError ? null : categories);
+      const removedCategories = _.difference(categoriesLocalStorage.map((data) =>  data.name), newCategoriesName);
+      const categories = _.uniqBy(categoriesLocalStorage.concat(newCategories), "name");
+
+      let position = 1;
+      const categoriesSorted = categories.map(({ name }) => {
+        // exclude unused categoires
+        if(!removedCategories.includes(name)) {
+          return { position: position++, name };
+        }
+      });
+      callback(chrome.runtime.lastError ? null : _.compact(categoriesSorted));
     });
   });
 }
