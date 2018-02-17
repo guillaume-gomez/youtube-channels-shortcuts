@@ -6,7 +6,18 @@ function getChannels(callback) {
 
 function getCategories(callback) {
   chrome.storage.sync.get("categories", (items) => {
-    callback(chrome.runtime.lastError ? null : items["categories"]);
+    getChannels((channels) => {
+      const categoriesLocalStorage = items["categories"] || [];
+      let position =  categoriesLocalStorage.length;
+      // from channels
+      const newCategoriesName = _.uniq(channels.map(channel => channel.category));
+      const newCategories = newCategoriesName.map(channel => {
+        position++;
+        return { position: position, name: channel };
+      });
+      const categories = _.uniqBy( categoriesLocalStorage.concat(newCategories), "name");
+      callback(chrome.runtime.lastError ? null : categories);
+    });
   });
 }
 
