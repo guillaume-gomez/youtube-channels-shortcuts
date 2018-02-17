@@ -6,7 +6,25 @@ function getChannels(callback) {
 
 function getCategories(callback) {
   chrome.storage.sync.get("categories", (items) => {
-    callback(chrome.runtime.lastError ? null : items["categories"]);
+    getChannels((channels) => {
+      const categoriesLocalStorage = _.sortBy(items["categories"] || [], "position");
+      // from channels
+      const newCategoriesName = _.uniq(channels.map(channel => channel.category));
+      const newCategories = newCategoriesName.map(channel => {
+        return { position: -1, name: channel };
+      });
+      const removedCategories = _.difference(categoriesLocalStorage.map((data) =>  data.name), newCategoriesName);
+      const categories = _.uniqBy(categoriesLocalStorage.concat(newCategories), "name");
+
+      let position = 1;
+      const categoriesSorted = categories.map(({ name }) => {
+        // exclude unused categoires
+        if(!removedCategories.includes(name)) {
+          return { position: position++, name };
+        }
+      });
+      callback(chrome.runtime.lastError ? null : _.compact(categoriesSorted));
+    });
   });
 }
 
@@ -20,7 +38,8 @@ function getActions(callback) {
   ];
 
   chrome.storage.sync.get("actions", (items) => {
-    const allActions = _.compact(items["actions"].concat(defaultActions));
+    const actionLocalStorage = items["actions"] || [];
+    const allActions = _.compact(actionLocalStorage.concat(defaultActions));
     const actions = _.uniqBy(allActions, "title");
     callback(chrome.runtime.lastError ? null : actions);
   });

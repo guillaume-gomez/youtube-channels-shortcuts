@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-
   const addButton = document.getElementById('addButton');
   addButton.addEventListener('click', () => {
     const table =  document.getElementById("main-table");
@@ -8,21 +7,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const saveButton = document.getElementById('saveButton');
   saveButton.addEventListener('click', () => {
-    saveChannels();
+    const error = saveChannels();
     saveCategories();
     saveActions();
+
+    if(!error) {
+      const categoriesTable = document.getElementById("categories-table");
+      fillCategoriesTable(categoriesTable);
+    }
   });
 
+  fillTables();
 
-  const table = document.getElementById("main-table");
-  fillMainOptionTable(table);
+  const importDataButton = document.getElementById("import-data");
+  importDataButton.addEventListener("click", () => {
+    const textarea = document.getElementById("import-export-data");
+    const data = JSON.parse(textarea.value);
+    importData(data);
+    fillTables();
+  });
 
-  const categoriesTable = document.getElementById("categories-table");
-  fillCategoriesTable(categoriesTable);
+  const exportDataButton = document.getElementById("export-data");
+  exportDataButton.addEventListener("click", () => {
+    getChannels((channels) => {
+      getCategories(categories => {
+        getActions((actions) => {
+          const textarea = document.getElementById("import-export-data");
+          textarea.value = JSON.stringify({ channels, categories, actions });
+        });
+      });
+    });
+  });
 
-  const actionsTable = document.getElementById("actions-table")
-  fillActionsTable(actionsTable);
 });
+
 
 function saveChannels() {
   const inputs = document.getElementsByClassName('channel-input');
@@ -46,6 +64,7 @@ function saveChannels() {
       addNotification("Successfully saved !", "success", 3000);
     });
   }
+  return error;
 }
 
 function saveCategories() {
@@ -71,6 +90,19 @@ function saveActions() {
   });
 }
 
+function importData(data) {
+  const { channels, categories, actions } = data;
+  chrome.storage.sync.set({channels}, () => {
+    addNotification("Successfully saved !", "success", 3000);
+  });
+  chrome.storage.sync.set({categories}, () => {
+    //addNotification("Successfully saved !", "success", 3000);
+  });
+  chrome.storage.sync.set({actions}, () => {
+    //addNotification("Successfully saved !", "success", 3000);
+  });
+}
+
 function addNotification(message, type, timer) {
   const notifDiv = document.getElementById('notification');
     notifDiv.innerHTML += "<div class='alert alert-"+type+"' role='alert'>"+message+"</div>";
@@ -80,6 +112,7 @@ function addNotification(message, type, timer) {
 }
 
 function fillMainOptionTable(table) {
+  clearTbody(table);
   getChannels( (channels) => {
     if(channels) {
       channels.forEach(param => {
@@ -90,6 +123,7 @@ function fillMainOptionTable(table) {
 }
 
 function fillCategoriesTable(table) {
+  clearTbody(table);
   getCategories((categories) => {
     categories.forEach((category, index) => {
       inserRowCategories(table, category);
@@ -98,11 +132,19 @@ function fillCategoriesTable(table) {
 }
 
 function fillActionsTable(table) {
+  clearTbody(table);
   getActions((actions) => {
-    actions.forEach(action =>{
+    actions.forEach(action => {
       insertRowAction(table, action);
     });
   });
+}
+
+function clearTbody(table) {
+  const rowCount = table.rows.length;
+  for(let i = rowCount; i > 1; i--) {
+    table.deleteRow(1);
+  }
 }
 
 function inserRowCategories(table, category) {
@@ -159,7 +201,7 @@ function insertRowMainTable(table, name = "", url = "", category="") {
   cell1.appendChild(input);
 
   cell2.innerHTML = "<input class='form-control channel-input' type='text' id='url' name='name' placeholder='https://www.youtube.com/signin?feature=masthead_switcher&next=%2Fdashboard%3Fo%3DU&action_handle_signin=true&authuser=0&skip_identity_prompt=False' value='"+url+"'>";
-  cell3.innerHTML = "<input class='form-control channel-input' type='text' id='category' name='category' placeholder='Personnal' value='"+category+"'>";
+  cell3.innerHTML = "<input class='form-control channel-input category-channel' type='text' id='category' name='category' placeholder='Personnal' value='"+category+"'>";
 
   let deleteButton = document.createElement("BUTTON");
   let textButton = document.createTextNode("-");
@@ -211,4 +253,14 @@ function moveRowDown(button) {
     return;
   }
   parent.insertBefore(anchor, row);
+}
+
+function fillTables() {
+  const mainTable = document.getElementById("main-table");
+  const categoriesTable = document.getElementById("categories-table");
+  const actionsTable = document.getElementById("actions-table")
+  
+  fillMainOptionTable(mainTable);
+  fillCategoriesTable(categoriesTable);
+  fillActionsTable(actionsTable);
 }
