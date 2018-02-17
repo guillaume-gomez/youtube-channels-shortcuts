@@ -7,9 +7,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const saveButton = document.getElementById('saveButton');
   saveButton.addEventListener('click', () => {
-    saveChannels();
+    const error = saveChannels();
     saveCategories();
     saveActions();
+
+    if(error) {
+      const categoriesTable = document.getElementById("categories-table");
+      fillCategoriesTable(categoriesTable);
+    }
   });
 
 
@@ -63,6 +68,7 @@ function saveChannels() {
       addNotification("Successfully saved !", "success", 3000);
     });
   }
+  return error;
 }
 
 function saveCategories() {
@@ -97,6 +103,7 @@ function addNotification(message, type, timer) {
 }
 
 function fillMainOptionTable(table) {
+  table.tBodies.innerHTML = "";
   getChannels( (channels) => {
     if(channels) {
       channels.forEach(param => {
@@ -107,6 +114,7 @@ function fillMainOptionTable(table) {
 }
 
 function fillCategoriesTable(table) {
+  table.tBodies.innerHTML = "";
   getCategories((categories) => {
     categories.forEach((category, index) => {
       inserRowCategories(table, category);
@@ -116,6 +124,7 @@ function fillCategoriesTable(table) {
 
 
 function fillActionsTable(table) {
+  table.tBodies.innerHTML = "";
   getActions((actions) => {
     actions.forEach(action =>{
       insertRowAction(table, action);
@@ -177,7 +186,7 @@ function insertRowMainTable(table, name = "", url = "", category="") {
   cell1.appendChild(input);
 
   cell2.innerHTML = "<input class='form-control channel-input' type='text' id='url' name='name' placeholder='https://www.youtube.com/signin?feature=masthead_switcher&next=%2Fdashboard%3Fo%3DU&action_handle_signin=true&authuser=0&skip_identity_prompt=False' value='"+url+"'>";
-  cell3.innerHTML = "<input class='form-control channel-input' type='text' id='category' name='category' placeholder='Personnal' value='"+category+"'>";
+  cell3.innerHTML = "<input class='form-control channel-input category-channel' type='text' id='category' name='category' placeholder='Personnal' value='"+category+"'>";
 
   let deleteButton = document.createElement("BUTTON");
   let textButton = document.createTextNode("-");
