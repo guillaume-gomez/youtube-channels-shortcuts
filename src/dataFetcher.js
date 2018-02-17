@@ -31,8 +31,8 @@ function getActions(callback) {
   ];
 
   chrome.storage.sync.get("actions", (items) => {
-    const actionChoosed = items["actions"] || [];
-    const allActions = _.compact(actionChoosed.concat(defaultActions));
+    const actionLocalStorage = items["actions"] || [];
+    const allActions = _.compact(actionLocalStorage.concat(defaultActions));
     const actions = _.uniqBy(allActions, "title");
     callback(chrome.runtime.lastError ? null : actions);
   });
