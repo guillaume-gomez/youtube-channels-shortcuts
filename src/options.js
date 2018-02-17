@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     saveCategories();
     saveActions();
 
-    if(error) {
+    if(!error) {
       const categoriesTable = document.getElementById("categories-table");
       fillCategoriesTable(categoriesTable);
     }
@@ -103,7 +103,7 @@ function addNotification(message, type, timer) {
 }
 
 function fillMainOptionTable(table) {
-  table.tBodies.innerHTML = "";
+  clearTbody(table);
   getChannels( (channels) => {
     if(channels) {
       channels.forEach(param => {
@@ -114,7 +114,7 @@ function fillMainOptionTable(table) {
 }
 
 function fillCategoriesTable(table) {
-  table.tBodies.innerHTML = "";
+  clearTbody(table);
   getCategories((categories) => {
     categories.forEach((category, index) => {
       inserRowCategories(table, category);
@@ -124,12 +124,19 @@ function fillCategoriesTable(table) {
 
 
 function fillActionsTable(table) {
-  table.tBodies.innerHTML = "";
+  clearTbody(table);
   getActions((actions) => {
-    actions.forEach(action =>{
+    actions.forEach(action => {
       insertRowAction(table, action);
     });
   });
+}
+
+function clearTbody(table) {
+  const rowCount = table.rows.length;
+  for(let i = rowCount; i > 1; i--) {
+    table.deleteRow(1);
+  }
 }
 
 function inserRowCategories(table, category) {
