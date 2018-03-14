@@ -72,6 +72,10 @@ function createActionInCard(channel_url, params) {
   let buttonItem = document.createElement("button");
   buttonItem.setAttribute('class', 'btn btn-secondary btn-sm');
   buttonItem.setAttribute('type', 'button');
+  buttonItem.dataset.toggle = "tooltip";
+  buttonItem.dataset.placement = "top";
+  buttonItem.dataset.title = params.title;
+  $(buttonItem).tooltip();
 
   let contentText = document.createTextNode(params.title);
   buttonItem.addEventListener('click', () => {
