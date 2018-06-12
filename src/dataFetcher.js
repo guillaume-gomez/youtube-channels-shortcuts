@@ -37,7 +37,7 @@ function getActions(callback) {
     {title: "Playlist", url: "https://www.youtube.com/view_all_playlists", icon: "fa fa-list", enabled: true},
     {title: "Comments", url: "https://www.youtube.com/comments", icon: "fa fa-comment", enabled: true},
     {title: "Messages", url: "https://www.youtube.com/comments", icon: "fa fa-comments", enabled: true},
-    {title: "Advanced settings", url: "https://www.youtube.com/advanced_settings", icon: "fa fa-cogs", enabled: true}
+    {title: "Advanced settings", url: "https://www.youtube.com/advanced_settings", icon: "fa fa-cogs", enabled: true},
     {title: "Live", url: "https://www.youtube.com/live_dashboard", icon: "fa fa-video-camera", enabled: true}
   ];
 
