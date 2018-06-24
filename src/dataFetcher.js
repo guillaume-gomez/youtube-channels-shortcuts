@@ -1,6 +1,7 @@
 function getChannels(callback) {
   chrome.storage.sync.get("channels", (items) => {
-    callback(chrome.runtime.lastError ? null : items["channels"]);
+    const callbackValue = Object.keys(items).includes("channels") ? items["channels"] : [];
+    callback(chrome.runtime.lastError ? null : callbackValue);
   });
 }
 
