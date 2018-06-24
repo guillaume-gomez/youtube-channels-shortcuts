@@ -9,6 +9,6 @@ This extension allows the user to switch between his channels
 - Click on `load unpacked extension` button
 - Select the folder `youtube-channel-switcher`
 - The extension is installed
-- Then go to `options` link contains in YoutubeChannelSwitcher (in exensions menu)
+- Then go to `options` link contains in YoutubeChannelsShortcuts (in exensions menu)
 - Add urls (your youtube channels url)
 - That's it !
