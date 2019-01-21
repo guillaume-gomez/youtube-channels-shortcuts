@@ -1,10 +1,10 @@
 {
-  "name": "Youtube Channel Switcher",
+  "name": "Youtube Channels Shortcuts",
   "description": "This extension allows the user to switch between his channels",
   "version": "1.0",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "browser_action": {
-    "default_title": "Youtube Channel Switcher",
+    "default_title": "Youtube Channels Shortcuts",
     "default_icon": "icons/icon19.png",
     "default_popup": "src/popup.html"
   },
