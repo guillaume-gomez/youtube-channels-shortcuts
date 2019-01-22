@@ -1,5 +1,5 @@
 # Youtube channels shortcuts (chrome extension)
-This extension allows the user to switch between his channels
+This extension allows you to switch between your youtube channels
 
 # How to install
 
