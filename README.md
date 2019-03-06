@@ -1,5 +1,6 @@
 # Youtube channels shortcuts (chrome extension)
 This extension allows you to switch between your youtube channels
+![preview](screenshots/preview.png)
 
 # How to install
 
