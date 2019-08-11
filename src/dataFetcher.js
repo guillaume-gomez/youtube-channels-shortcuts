@@ -31,15 +31,16 @@ function getCategories(callback) {
 
 function getActions(callback) {
   const defaultActions = [
-    {title: "Dashboard", url: "https://www.youtube.com/dashboard?o=U", icon: "fa fa-home", enabled: true},
-    {title: "Channel", url: "https://www.youtube.com/features", icon: "fa fa-television", enabled: true},
-    {title: "Analytics", url: "https://www.youtube.com/analytics?o=U", icon: "fa fa-bar-chart", enabled: true},
-    {title: "Video", url: "https://www.youtube.com/my_videos?o=U", icon: "fa fa-youtube-play", enabled: true},
-    {title: "Playlist", url: "https://www.youtube.com/view_all_playlists", icon: "fa fa-list", enabled: true},
-    {title: "Comments", url: "https://www.youtube.com/comments", icon: "fa fa-comment", enabled: true},
-    {title: "Messages", url: "https://www.youtube.com/comments", icon: "fa fa-comments", enabled: true},
-    {title: "Advanced settings", url: "https://www.youtube.com/advanced_settings", icon: "fa fa-cogs", enabled: true},
-    {title: "Live", url: "https://www.youtube.com/live_dashboard", icon: "fa fa-video-camera", enabled: true}
+    {title: "Channel Page", url: "https://www.youtube.com/channel/", extendUrl: true, icon: "fa fa-home", enabled: true},
+    {title: "Dashboard", url: "https://www.youtube.com/dashboard?o=U", extendUrl: false, icon: "fa fa-home", enabled: false},
+    {title: "Channel", url: "https://www.youtube.com/features", extendUrl: false, icon: "fa fa-television", enabled: true},
+    {title: "Analytics", url: "https://www.youtube.com/analytics?o=U", extendUrl: false, icon: "fa fa-bar-chart", enabled: true},
+    {title: "Video", url: "https://www.youtube.com/my_videos?o=U", extendUrl: false, icon: "fa fa-youtube-play", enabled: true},
+    {title: "Playlist", url: "https://www.youtube.com/view_all_playlists", extendUrl: false, icon: "fa fa-list", enabled: true},
+    {title: "Comments", url: "https://www.youtube.com/comments", extendUrl: false, icon: "fa fa-comment", enabled: true},
+    {title: "Messages", url: "https://www.youtube.com/comments", extendUrl: false, icon: "fa fa-comments", enabled: true},
+    {title: "Advanced settings", url: "https://www.youtube.com/advanced_settings", extendUrl: false, icon: "fa fa-cogs", enabled: true},
+    {title: "Live", url: "https://www.youtube.com/live_dashboard", extendUrl: false, icon: "fa fa-video-camera", enabled: true}
   ];
 
   chrome.storage.sync.get("actions", (items) => {
