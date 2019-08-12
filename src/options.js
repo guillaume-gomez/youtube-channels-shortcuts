@@ -46,14 +46,15 @@ function saveChannels() {
   const inputs = document.getElementsByClassName('channel-input');
   let channels = [];
   let error = false;
-  const rowSize = 3;
+  const rowSize = 4;
   for(let i = 0; i < (inputs.length / rowSize); ++i) {
       const name = inputs[rowSize * i].value;
       const url = inputs[(rowSize * i) + 1].value;
-      const category = inputs[(rowSize * i) + 2].value || "Personnal";
+      const channelId = inputs[(rowSize * i) + 2].value;
+      const category = inputs[(rowSize * i) + 3].value || "Personnal";
 
       if(name.length > 0 && url.length > 0) {
-        channels.push({name, url, category});
+        channels.push({ name, url, category, channelId });
       } else {
         error = true;
         addNotification("Line: "+(i + 1)+" could not saved( youtube channel and url is mandatory)", "danger", 5000);
@@ -116,7 +117,7 @@ function fillMainOptionTable(table) {
   getChannels( (channels) => {
     if(channels) {
       channels.forEach(param => {
-        insertRowMainTable(table, param.name, param.url, param.category);
+        insertRowMainTable(table, param.name, param.url, param.channelId, param.category);
       });
     }
   });
@@ -153,6 +154,7 @@ function inserRowCategories(table, category) {
   let cell2 = row.insertCell(1);
   let cell3 = row.insertCell(2);
 
+
   cell1.innerHTML = category.position;
   cell1.setAttribute('class', "category-position");
 
@@ -185,12 +187,13 @@ function inserRowCategories(table, category) {
   cell3.setAttribute('scope', "row");
 }
 
-function insertRowMainTable(table, name = "", url = "", category="") {
+function insertRowMainTable(table, name = "", url = "", channelId = "", category="") {
   let row = table.insertRow();
   let cell1 = row.insertCell(0);
   let cell2 = row.insertCell(1);
   let cell3 = row.insertCell(2);
   let cell4 = row.insertCell(3);
+  let cell5 = row.insertCell(4);
 
 
   let input = document.createElement("input");
@@ -201,7 +204,9 @@ function insertRowMainTable(table, name = "", url = "", category="") {
   cell1.appendChild(input);
 
   cell2.innerHTML = "<input class='form-control channel-input' type='text' id='url' name='name' placeholder='https://www.youtube.com/signin?feature=masthead_switcher&next=%2Fdashboard%3Fo%3DU&action_handle_signin=true&authuser=0&skip_identity_prompt=False' value='"+url+"'>";
-  cell3.innerHTML = "<input class='form-control channel-input category-channel' type='text' id='category' name='category' placeholder='Personnal' value='"+category+"'>";
+  cell3.innerHTML = "<input class='form-control channel-input channel-id' type='text' id='channel-id' name='channel-id' placeholder='Channel' value='"+channelId+"'>";
+  cell4.innerHTML = "<input class='form-control channel-input category-channel' type='text' id='category' name='category' placeholder='Personnal' value='"+category+"'>";
+
 
   let deleteButton = document.createElement("BUTTON");
   let textButton = document.createTextNode("-");
@@ -210,8 +215,8 @@ function insertRowMainTable(table, name = "", url = "", category="") {
   deleteButton.addEventListener("click", (e) => {
     deleteRow(e.target);
   });
-  cell4.appendChild(deleteButton);
-  cell4.setAttribute('scope', "row");
+  cell5.appendChild(deleteButton);
+  cell5.setAttribute('scope', "row");
 }
 
 function insertRowAction(table, action) {
