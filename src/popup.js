@@ -114,7 +114,8 @@ function createCard(item) {
   getActions(actions => {
     actions.forEach(action => {
       if(action.enabled) {
-        buttonGroup.appendChild(createActionInCard(item.url, action));
+        const url = action.extendUrl ? `${action.url}${item.channelId}` : action.url;
+        buttonGroup.appendChild(createActionInCard(url, action));
       }
     });
   });
